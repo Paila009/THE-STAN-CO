@@ -1,7 +1,3 @@
-.masthead-actions { display: flex; justify-content: flex-end; align-items: center; }
-.page-progress { position: sticky; top: 64px; z-index: 11; height: 2px; margin-top: -2px; pointer-events: none; }
-.page-progress::after { content: ''; display: block; height: 100%; background: #789aff; transform: scaleX(var(--page-read, 0)); transform-origin: left; }
-
 .premiere {
   --premiere-open-ease: cubic-bezier(.22, .76, .24, 1);
   position: relative;
@@ -9,7 +5,7 @@
   display: grid;
   grid-template-rows: 1fr auto;
   align-items: stretch;
-  min-height: clamp(595px, calc(100svh - 97px), 865px);
+  min-height: clamp(595px, calc(100svh - var(--masthead-height) - var(--announcement-height)), 865px);
   color: #f4f5f8;
   background: #090a0e;
 }
@@ -249,15 +245,7 @@
 .browse-label strong { font: 900 clamp(21px, 2.6vw, 36px)/.94 var(--display); text-transform: uppercase; }
 .browse-label > span { position: absolute; right: 9px; bottom: 11px; }
 
-@media (max-width: 850px) {
-  .masthead-nav { gap: 15px; }
-  .masthead-nav .nav-info { display: none; }
-}
 @media (max-width: 680px) {
-  .page-progress { top: 54px; }
-  .masthead-nav { gap: 10px; }
-  .masthead-nav a[href="#cinema"] { display: none; }
-  .masthead-nav a { font-size: 10px; }
   .premiere { min-height: auto; }
   .premiere-inner { grid-template-columns: 1fr; gap: 1px; padding-top: 37px; padding-bottom: 14px; }
   .premiere-copy .section-kicker { font-size: 9px; margin-bottom: 17px; }
@@ -272,7 +260,6 @@
   .browse-label { min-height: 55px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .page-progress { display: none; }
   .premiere :is(.premiere-copy, .premiere-object) { transform: none; }
   .premiere:is(.is-opening, .is-in-view) .premiere-light::before,
   .premiere:is(.is-opening, .is-in-view) .premiere-light::after,

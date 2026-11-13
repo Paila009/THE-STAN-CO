@@ -1,4 +1,5 @@
 import './styles.css';
+import './header.css';
 import './stage.css';
 import './premiere-fashion.css';
 import './cinema.css';
