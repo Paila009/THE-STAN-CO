@@ -70,7 +70,9 @@ export function mountBrandIntro(screen, { onReveal, onSkip }) {
   screen.classList.add('is-managed');
   timer = window.setTimeout(reveal, 2600);
   video.muted = true;
-  video.src = video.dataset.src;
+  video.src = matchMedia('(max-width: 760px), (hover: none) and (pointer: coarse)').matches
+    ? video.dataset.mobileSrc
+    : video.dataset.desktopSrc;
   video.play().catch(reveal);
 
   return { active: () => !signal.aborted && screen.dataset.phase !== 'exit', close };
