@@ -130,15 +130,11 @@
   height: 101%;
 }
 
-.actor-chapter--featured .actor-chapter__portrait--white-suit {
+#october-23rd-drop .actor-chapter__portrait {
   left: 5%;
   width: 95%;
   height: 91%;
   filter: drop-shadow(0 18px 36px #041326a0);
-}
-
-.actor-chapter__portrait--alternate {
-  height: 103%;
 }
 
 .actor-chapter__heading {
@@ -424,7 +420,7 @@
     height: 91%;
   }
 
-  .actor-chapter--featured .actor-chapter__portrait--white-suit {
+  #october-23rd-drop .actor-chapter__portrait {
     left: 1%;
     width: 98%;
     height: 82%;
@@ -462,8 +458,11 @@
 #october-23rd-drop .actor-chapter__card-name { font-size: clamp(18px, 2.35vw, 36px); }
 
 @media (max-width: 760px) {
+  #october-23rd-drop .actor-chapter__scene { min-height: clamp(675px, 175vw, 810px); }
   #october-23rd-drop .actor-chapter__heading h2 { font-size: clamp(30px, 8.4vw, 64px); }
   #october-23rd-drop .actor-chapter__card-name { font-size: clamp(16px, 4.5vw, 30px); }
+  #october-23rd-drop .actor-chapter__media { inset: clamp(128px, 31vw, 158px) -10% 29%; }
+  #october-23rd-drop .actor-chapter__portrait { height: 100%; }
 }
 
 /* Give the Frame District portrait its own space beside or below the title. */

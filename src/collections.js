@@ -170,7 +170,7 @@ export const collections = collectionDetails.map(({ items, ...collection }) => (
 export const actorProducts = collections.flatMap(collection => collection.products);
 
 const collectionPortraits = {
-  'october-23rd-drop': 'model-rebelwood-white',
+  'october-23rd-drop': 'model-rebel-forest-green',
   'allu-arjun': 'model-grain-grit',
   'mahesh-babu': 'model-motion-archive',
   'ram-charan': 'model-heatwave-press',

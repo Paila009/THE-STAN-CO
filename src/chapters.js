@@ -7,9 +7,9 @@ const artDirection = {
     accent: '#ffb47e',
     ink: '#210e0b',
     glow: '#823c21',
-    alternate: '/images/model-rebelwood-dark.webp',
-    alt: 'Fashion model in an off-white suit',
-    alternateAlt: 'Fashion model in a dark pinstripe suit',
+    alternate: '/images/model-rebel-black.webp',
+    alt: 'Fashion model wearing the forest green Rebel T-shirt',
+    alternateAlt: 'Fashion model wearing the black Rebel T-shirt',
     portraitSize: [896, 1120],
   },
   'frame-shift-studio': {
@@ -121,8 +121,8 @@ function chapterMarkup(collection, index) {
         <div class="actor-chapter__field" aria-hidden="true"></div>
         <div class="actor-chapter__watermark" aria-hidden="true">${name}</div>
         <div class="actor-chapter__media">
-          <img class="actor-chapter__portrait is-active${direction.alternate ? ' actor-chapter__portrait--white-suit' : ''}" src="${portrait}" alt="${alt}" width="${portraitWidth}" height="${portraitHeight}" loading="lazy" decoding="async">
-          ${direction.alternate ? `<img class="actor-chapter__portrait actor-chapter__portrait--alternate" src="${direction.alternate}" alt="${direction.alternateAlt}" width="${portraitWidth}" height="${portraitHeight}" loading="lazy" decoding="async" aria-hidden="true">` : ''}
+          <img class="actor-chapter__portrait is-active" src="${portrait}" alt="${alt}" width="${portraitWidth}" height="${portraitHeight}" loading="lazy" decoding="async">
+          ${direction.alternate ? `<img class="actor-chapter__portrait" src="${direction.alternate}" alt="${direction.alternateAlt}" width="${portraitWidth}" height="${portraitHeight}" loading="lazy" decoding="async" aria-hidden="true">` : ''}
         </div>
         <header class="actor-chapter__heading" data-chapter-heading>
           <p>The Stan Co.</p>
@@ -134,9 +134,9 @@ function chapterMarkup(collection, index) {
         </ul>
         <footer class="actor-chapter__footer">
           ${direction.alternate ? `
-            <div class="actor-chapter__looks" role="group" aria-label="${name} portrait">
-              <button type="button" data-chapter-look="0" aria-pressed="true">White suit</button>
-              <button type="button" data-chapter-look="1" aria-pressed="false">Dark suit</button>
+            <div class="actor-chapter__looks" role="group" aria-label="Rebel T-shirt colour on model">
+              <button type="button" data-chapter-look="0" aria-pressed="true">Green T-shirt</button>
+              <button type="button" data-chapter-look="1" aria-pressed="false">Black T-shirt</button>
             </div>
           ` : '<span class="actor-chapter__image-note">AI-generated model artwork</span>'}
           <a class="actor-chapter__next" href="#${nextId}">${nextLabel}<span aria-hidden="true">↓</span></a>
