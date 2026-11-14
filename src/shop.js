@@ -1,17 +1,15 @@
 import QRCode from 'qrcode';
-import { actorProducts, teeTypes } from './collections.js';
+import { actorProducts, collections, teeTypes } from './collections.js';
 import './shop.css';
 
-const drop = { slug: 'oct23ed', name: '#oct23ed Drop' };
-const featuredProducts = [
-  { slug: 'original-rebel-green', teeType: 'graphic', name: 'The Original Rebel Classic T-Shirt', color: 'Forest green', hex: '#113729', image: '/images/rebel-tee-green.webp', description: 'A deep-green crew-neck tee with a small, warm-toned rebel print at the chest.' },
-  { slug: 'original-rebel-black', teeType: 'graphic', name: 'The Original Rebel Classic T-Shirt', color: 'Black', hex: '#222222', image: '/images/rebel-tee-black.webp', description: 'A black crew-neck tee with a small white rebel print at the chest.' },
-  { slug: 'king-of-the-sea-pendant', teeType: 'accessory', name: 'King of the Sea Pendant', color: 'Natural shell', hex: '#dfc5a0', image: '/images/king-of-the-sea-pendant.webp', description: 'A cream and amber shell pendant on a rust-and-black twisted cord.' },
-].map(product => ({ ...product, collection: drop.slug, collectionName: drop.name }));
-const hoodieProducts = actorProducts.filter(product => product.garment === 'hoodie');
-export const products = [...featuredProducts, ...hoodieProducts];
-const shopTypes = teeTypes.filter(type => type.slug === 'graphic' || type.slug === 'hoodie')
-  .concat({ slug: 'accessory', name: 'Accessories' });
+const firstShowProducts = [
+  { slug: 'first-show', teeType: 'typography', name: 'First Show', color: 'Washed black', hex: '#353535', price: 109900, stock: [3, 6, 8, 5, 2], description: 'A ticket on the chest and a burst of projector light and confetti across the back.' },
+  { slug: 'fire-flood', teeType: 'graphic', name: 'Fire & Flood', color: 'Bone', hex: '#e4ddcb', price: 119900, stock: [2, 6, 7, 4, 1], description: 'A small elemental crest up front. Cobalt waves meet flame-orange contours on the back.' },
+  { slug: 'small-fury', teeType: 'graphic', name: 'Small Fury', color: 'Deep olive', hex: '#40483b', price: 109900, stock: [0, 3, 6, 4, 2], description: 'A tiny citrus fly on the chest. A close-up of its wings and a ringed lens on the back.' },
+  { slug: 'home-turf', teeType: 'geometric', name: 'Home Turf', color: 'Cobalt', hex: '#2547af', price: 119900, stock: [2, 4, 6, 2, 0], description: 'A cream court mark on the chest. Kabaddi court lines and orange boundary marks on the back.' },
+].map(product => ({ ...product, collection: 'first-show', collectionName: 'First Show' }));
+
+export const products = [...actorProducts, ...firstShowProducts];
 
 const searchWords = text => text.toLocaleLowerCase('en-IN').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
 const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
@@ -21,10 +19,10 @@ const cartKey = 'the-stan-co:first-show:bag';
 const rupees = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
 const price = amount => rupees.format(amount / 100);
 const productFor = slug => products.find(product => product.slug === slug);
-const garmentName = product => product.image || product.garment === 'hoodie' || /\btee$/i.test(product.name) ? product.name : product.name + ' tee';
+const garmentName = product => product.garment === 'hoodie' || /\btee$/i.test(product.name) ? product.name : product.name + ' tee';
 const photoDescription = (product, side) => `${product.color} ${garmentName(product)}, ${side} view`;
-const art = (product, side = 'front') => product.image ?? '/images/' + product.slug + '-' + side + '.webp';
-const quantityInStock = (product, size) => product.stock?.[sizes.indexOf(size)] ?? 0;
+const art = (product, side = 'front') => '/images/' + product.slug + '-' + side + '.webp';
+const quantityInStock = (product, size) => product.stock[sizes.indexOf(size)] ?? 0;
 
 function readBag() {
   try {
@@ -47,11 +45,9 @@ function readBag() {
 }
 
 function catalogCard(product) {
-  const back = product.image ? '' : '<img class="stan-card-back" src="' + art(product, 'back') + '" width="780" height="900" alt="" loading="lazy" decoding="async">';
-  const cost = product.price === undefined ? 'Price pending' : price(product.price);
-  return '<article class="stan-card"><button class="stan-card-button" data-product="' + product.slug + '" aria-label="View ' + garmentName(product) + ', ' + product.color + '">'
-    + '<span class="stan-card-art"><img src="' + art(product) + '" width="780" height="900" alt="" loading="lazy" decoding="async">' + back + '<span class="stan-card-open" aria-hidden="true">↗</span></span>'
-    + '<span class="stan-card-meta"><span class="stan-card-name">' + product.name + '</span><span class="stan-card-price">' + cost + '</span></span><span class="stan-card-color">' + product.color + ' · ' + product.collectionName + '</span></button></article>';
+  return '<article class="stan-card"><button class="stan-card-button" data-product="' + product.slug + '" aria-label="View ' + garmentName(product) + '">'
+    + '<span class="stan-card-art"><img src="' + art(product) + '" width="780" height="900" alt="" loading="lazy" decoding="async"><img class="stan-card-back" src="' + art(product, 'back') + '" width="780" height="900" alt="" loading="lazy" decoding="async"><span class="stan-card-open" aria-hidden="true">↗</span></span>'
+    + '<span class="stan-card-meta"><span class="stan-card-name">' + product.name + '</span><span class="stan-card-price">' + price(product.price) + '</span></span><span class="stan-card-color">' + product.color + ' · ' + product.collectionName + '</span></button></article>';
 }
 
 export function mountShop({ shop, dialog }) {
@@ -72,11 +68,11 @@ export function mountShop({ shop, dialog }) {
   }
   const collectionChoices = [
     { slug: 'all', name: 'All collections' },
-    drop,
-    ...hoodieProducts.map(product => ({ slug: product.collection, name: product.collectionName })),
+    ...collections,
+    { slug: 'first-show', name: 'First Show' },
   ];
   const colours = [...new Set(products.map(product => product.color))].sort();
-  const typeNames = new Map(shopTypes.map(type => [type.slug, type.name]));
+  const typeNames = new Map(teeTypes.map(type => [type.slug, type.name]));
   const initialLimit = 8;
   let expanded = false;
 
@@ -87,7 +83,7 @@ export function mountShop({ shop, dialog }) {
     + '<label class="stan-filter-field"><span>Collection</span><select class="stan-collection-filter">'
     + collectionChoices.map(collection => '<option value="' + collection.slug + '">' + collection.name + '</option>').join('')
     + '</select></label><label class="stan-filter-field"><span>Design type</span><select class="stan-type-filter">'
-    + '<option value="">All types</option>' + shopTypes.map(type => '<option value="' + type.slug + '">' + type.name + '</option>').join('')
+    + '<option value="">All types</option>' + teeTypes.map(type => '<option value="' + type.slug + '">' + type.name + '</option>').join('')
     + '</select></label><label class="stan-filter-field"><span>Colour</span><select class="stan-colour-filter">'
     + '<option value="">All colours</option>' + colours.map(colour => '<option>' + colour + '</option>').join('')
     + '</select></label><label class="stan-filter-field"><span>Sort</span><select class="stan-sort">'
@@ -116,8 +112,8 @@ export function mountShop({ shop, dialog }) {
       return keywords.every(keyword => text.includes(keyword));
     });
 
-    if (sort.value === 'low') visible.sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
-    if (sort.value === 'high') visible.sort((a, b) => (b.price ?? -Infinity) - (a.price ?? -Infinity));
+    if (sort.value === 'low') visible.sort((a, b) => a.price - b.price);
+    if (sort.value === 'high') visible.sort((a, b) => b.price - a.price);
 
     const displayed = expanded ? visible : visible.slice(0, initialLimit);
     grid.innerHTML = displayed.map(catalogCard).join('');
@@ -189,13 +185,6 @@ export function mountShop({ shop, dialog }) {
 
   function showProduct() {
     const product = activeProduct;
-    if (product.image) {
-      show('product', product.name, '<div class="stan-product"><div class="stan-product-art">'
-        + '<img src="' + product.image + '" alt="' + product.name + ' in ' + product.color + '"></div>'
-        + '<div class="stan-product-details"><p><span class="stan-swatch" style="--swatch:' + product.hex + '"></span>' + product.color + '</p>'
-        + '<p>' + product.description + '</p><p class="stan-muted">Pricing and availability to be announced.</p></div></div>', { wide: true });
-      return;
-    }
     const isHoodie = product.garment === 'hoodie';
     const measurements = isHoodie ? hoodieSizeChart : sizeChart;
     const modelControls = isHoodie ? '' : '<button type="button" class="stan-view-3d" data-shop-action="view-3d" aria-pressed="false">View 3D</button>';
