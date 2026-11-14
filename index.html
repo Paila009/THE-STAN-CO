@@ -13,10 +13,31 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <div class="opening-slate" hidden aria-hidden="true">
-    <div class="opening-slate__thread"></div>
-    <div class="opening-slate__label"><span>The Stan Co.</span></div>
+  <div class="opening-slate" hidden>
+    <div class="opening-slate__loading" role="status">
+      <div class="opening-slate__monogram" aria-hidden="true">S<span>.</span></div>
+      <span>Loading storefront</span>
+      <div class="opening-slate__meter" aria-hidden="true"><span></span></div>
+    </div>
+    <div class="opening-slate__brand" aria-hidden="true">
+      <div class="opening-slate__scene">
+        <div class="opening-slate__tags">
+          <span></span><span></span><span><b>STAN<br>CO.</b></span>
+        </div>
+      </div>
+      <div class="opening-slate__copy">
+        <p>The Stan Co.</p>
+        <p>Good fits.<br>Loud prints.</p>
+      </div>
+    </div>
+    <button class="opening-slate__skip" type="button" data-intro-skip>Skip intro <span aria-hidden="true">→</span></button>
   </div>
+  <script>
+    if ((!location.hash || location.hash === '#top') && !matchMedia('(prefers-reduced-motion: reduce)').matches
+        && performance.getEntriesByType('navigation')[0]?.type !== 'back_forward') {
+      document.querySelector('.opening-slate').hidden = false;
+    }
+  </script>
   <header class="masthead">
     <a class="wordmark" href="#top" aria-label="The Stan Co. home">
       <span>THE STAN CO<span class="wordmark-dot">.</span></span>
@@ -38,7 +59,7 @@
     <section class="hero premiere" id="top" aria-labelledby="opening-title">
       <div class="premiere-inner">
         <div class="premiere-copy">
-          <h1 id="opening-title">
+          <h1 id="opening-title" tabindex="-1">
             <span class="premiere-title-line"><span>The Stan</span></span>
             <span class="premiere-title-line"><span>Co<span class="premiere-title-dot">.</span></span></span>
           </h1>

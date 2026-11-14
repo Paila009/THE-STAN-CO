@@ -1,5 +1,6 @@
 import { collectionPortrait, collections, teeTypes } from './collections.js';
 import './hero-strip.css';
+import { mountBrandIntro } from './brand-intro.js';
 
 const chapterId = (slug) => slug === 'allu-arjun' ? 'bhaai' : slug;
 
@@ -130,19 +131,28 @@ export function mountOpening(hero) {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
   const progress = document.querySelector('.page-progress');
-  const slate = document.querySelector('.opening-slate');
   const lookbook = hero.querySelector('.premiere-lookbook');
   const motion = hero.querySelector('[data-hero-motion]');
-  const startsAtOpening = !location.hash || location.hash === '#top';
   let visible = true;
   let paused = false;
   let scrollFrame = 0;
   let openingTimeout;
 
+  const intro = mountBrandIntro(document.querySelector('.opening-slate'), {
+    heroImage: hero.querySelector('.premiere-feature img'),
+    onReveal() {
+      hero.classList.add('is-opening');
+      openingTimeout = window.setTimeout(() => hero.classList.remove('is-opening'), 1550);
+    },
+    onSkip(moveFocus) {
+      if (moveFocus) hero.querySelector('h1').focus({ preventScroll: true });
+    },
+  });
+
   function finishOpening() {
+    intro?.skip();
     clearTimeout(openingTimeout);
     hero.classList.remove('is-opening');
-    slate.hidden = true;
   }
 
   function resetPointer() {
@@ -163,7 +173,7 @@ export function mountOpening(hero) {
     scheduleScroll();
   });
   lookbook.addEventListener('pointermove', (event) => {
-    if (!finePointer.matches || event.pointerType === 'touch' || reduced.matches || paused || !slate.hidden) return;
+    if (!finePointer.matches || event.pointerType === 'touch' || reduced.matches || paused || intro?.active()) return;
     const bounds = lookbook.getBoundingClientRect();
     const x = (event.clientX - bounds.left) / bounds.width - .5;
     const y = (event.clientY - bounds.top) / bounds.height - .5;
@@ -176,15 +186,6 @@ export function mountOpening(hero) {
   finePointer.addEventListener('change', resetPointer);
   document.addEventListener('visibilitychange', syncMotion);
 
-  if (startsAtOpening && !reduced.matches && window.scrollY < 80) {
-    slate.hidden = false;
-    hero.classList.add('is-opening');
-    openingTimeout = window.setTimeout(finishOpening, 1720);
-  }
-
-  slate.addEventListener('animationend', (event) => {
-    if (event.target === slate) slate.hidden = true;
-  });
   document.querySelector('.skip-link').addEventListener('focus', finishOpening);
   document.querySelector('.masthead').addEventListener('focusin', finishOpening);
   hero.addEventListener('focusin', finishOpening);

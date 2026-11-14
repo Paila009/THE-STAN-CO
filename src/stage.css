@@ -8,47 +8,6 @@
   color: var(--hero-ink);
 }
 
-.opening-slate {
-  position: fixed;
-  inset: 0;
-  z-index: 14;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  background:
-    linear-gradient(90deg, #ffffff12 1px, transparent 1px) 50% 50% / 46px 46px,
-    linear-gradient(#ffffff12 1px, transparent 1px) 50% 50% / 46px 46px,
-    var(--brand-ink);
-  color: #fff6e0;
-  pointer-events: none;
-  animation: opening-wipe 1000ms cubic-bezier(.76,0,.24,1) both;
-}
-.opening-slate[hidden] { display: none; }
-.opening-slate__thread {
-  position: absolute;
-  inset: 50% -12% auto;
-  border-top: 2px dashed var(--brand-orange);
-  animation: label-thread 780ms var(--hero-ease, ease-out) both;
-}
-.opening-slate__label {
-  position: relative;
-  padding: .34em .58em .43em;
-  border: 1px solid var(--brand-orange);
-  background: #fff6e0;
-  box-shadow: .085em .095em 0 var(--brand-orange);
-  color: var(--brand-ink);
-  font: 700 clamp(36px, 8vw, 114px)/.9 var(--landing-display);
-  letter-spacing: -.04em;
-  text-transform: uppercase;
-  animation: label-pop 580ms var(--hero-ease, ease-out) both;
-}
-.opening-slate__label::before {
-  content: '';
-  position: absolute;
-  inset: .095em;
-  border: 1px dashed var(--brand-blue);
-}
-
 .premiere-inner {
   display: grid;
   grid-template-columns: minmax(0, 1.06fr) minmax(0, 1fr);
@@ -256,19 +215,6 @@
 .premiere.has-motion:not(.is-in-view, .is-opening) .premiere-scan::before { animation-play-state: paused; }
 .premiere:not(.has-motion) .premiere-feature { transform: none; }
 
-@keyframes opening-wipe {
-  0%, 57% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
-  100% { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); }
-}
-@keyframes label-thread {
-  from { transform: rotate(-7deg) scaleX(0); }
-  to { transform: rotate(-7deg) scaleX(1); }
-}
-@keyframes label-pop {
-  from { opacity: 0; transform: translateY(24%) scale(.7) rotate(-18deg); }
-  70% { opacity: 1; transform: scale(1.035) rotate(-4deg); }
-  to { transform: rotate(-7deg); }
-}
 @keyframes title-rise { from { transform: translateY(115%); } to { transform: none; } }
 @keyframes detail-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 @keyframes grid-arrival { from { opacity: 0; } to { opacity: 1; } }
@@ -305,7 +251,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .opening-slate { display: none; }
   .premiere *, .premiere *::before, .premiere *::after { animation: none !important; transition: none !important; }
   .premiere-feature { transform: none; }
 }
