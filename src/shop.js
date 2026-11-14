@@ -1,6 +1,8 @@
 import QRCode from 'qrcode';
 import { actorProducts, collections, teeTypes } from './collections.js';
+import { mountShopFan } from './shop-fan.js';
 import './shop.css';
+import './shop-fan.css';
 
 const firstShowProducts = [
   { slug: 'first-show', teeType: 'typography', name: 'First Show', color: 'Washed black', hex: '#353535', price: 109900, stock: [3, 6, 8, 5, 2], description: 'A ticket on the chest and a burst of projector light and confetti across the back.' },
@@ -33,6 +35,39 @@ const quantityLimit = (product, size) => {
   return product.stock?.[index] ?? Infinity;
 };
 const lineDescription = (product, size) => size ? product.color + ' / ' + size : product.color;
+
+function shopOpening() {
+  const arrangement = [
+    { slug: 'frame-district-tee', tone: 'oat' },
+    { slug: 'red-sandal', tone: 'sage' },
+    { slug: 'original-rebel-black', tone: 'steel' },
+    { slug: 'original-rebel', tone: 'blue', image: '/images/model-rebel-forest-green.webp', lead: true },
+    { slug: 'city-frequency', tone: 'sand' },
+    { slug: 'one-take', tone: 'blue' },
+    { slug: 'rhythm-club', tone: 'peach' },
+  ];
+  const cards = arrangement.map(({ slug, tone, image, lead }, index) => {
+    const product = productFor(slug);
+    const offset = index - 3;
+    const depth = Math.abs(offset);
+    const picture = '<img src="' + (image ?? art(product, 'back')) + '" alt="" width="780" height="900" decoding="async" loading="lazy">';
+    const face = lead
+      ? '<button type="button" data-product="' + product.slug + '" aria-label="View ' + product.name + '">' + picture
+        + '<span class="stan-fan-label"><strong>Original Rebel</strong><span>' + price(product.price) + ' <span aria-hidden="true">↗</span></span></span></button>'
+      : picture;
+    return '<li class="stan-fan-card stan-fan-card--' + tone + (lead ? ' stan-fan-card--lead' : '')
+      + '" style="--fan-offset:' + offset + ';--fan-depth:' + depth + ';--fan-layer:' + (4-depth) + '">'
+      + face + (product.comingSoon ? '<span class="stan-fan-status">Coming soon</span>' : '')
+      + (lead ? '' : '<span class="stan-visually-hidden">' + product.name + '</span>')
+      + '</li>';
+  }).join('');
+
+  return '<div class="stan-shop-opening"><header class="stan-shop-heading">'
+    + '<div class="stan-shop-heading-copy"><h2 id="stan-shop-title" tabindex="-1">Shop the drop<span>.</span></h2>'
+    + '<div class="stan-shop-opening-actions"><a class="stan-shop-featured" href="#shop-filters" data-collection="october-23rd-drop">October 23rd Drop <span aria-hidden="true">↗</span></a>'
+    + '<a class="stan-fan-skip" href="#shop-filters" data-collection="all">Browse all products <span aria-hidden="true">↓</span></a></div></div>'
+    + '<ul class="stan-shop-fan" aria-label="Featured T-shirts">' + cards + '</ul></header></div>';
+}
 
 function readBag() {
   try {
@@ -94,14 +129,8 @@ export function mountShop({ shop, dialog }) {
   const initialLimit = 8;
   let expanded = false;
 
-  shop.innerHTML = '<div class="stan-shop-shell"><header class="stan-shop-heading">'
-    + '<div class="stan-shop-heading-copy"><h2 id="stan-shop-title" tabindex="-1">Shop the<br> drop<span>.</span></h2>'
-    + '<a class="stan-shop-featured" href="#shop" data-collection="october-23rd-drop">October 23rd Drop <span aria-hidden="true">↗</span></a>'
-    + '<p class="stan-preview-note">Store preview</p></div>'
-    + '<div class="stan-shop-art" aria-hidden="true"><div class="stan-shop-pattern"></div>'
-    + '<img class="stan-shop-model" src="/images/model-rebel-forest-green.webp" alt="" width="896" height="1120" loading="lazy" decoding="async">'
-    + '<figure class="stan-shop-swatch"><img src="/images/rebel-tee-black.webp" alt="" width="940" height="905" loading="lazy" decoding="async"></figure></div></header>'
-    + '<div class="stan-shop-tools" role="group" aria-label="Filter and sort clothing">'
+  shop.innerHTML = '<div class="stan-shop-shell">' + shopOpening()
+    + '<div class="stan-shop-tools" id="shop-filters" role="group" aria-label="Filter and sort clothing">'
     + '<label class="stan-filter-field stan-search"><span>Search clothing</span><input type="search" placeholder="Search by name, colour or style"></label>'
     + '<label class="stan-filter-field"><span id="stan-filter-collection">Collection</span><select class="stan-collection-filter" aria-labelledby="stan-filter-collection">'
     + collectionChoices.map(collection => '<option value="' + collection.slug + '">' + collection.name + '</option>').join('')
@@ -116,6 +145,7 @@ export function mountShop({ shop, dialog }) {
     + '<p class="stan-no-matches" hidden>No items match these filters. <button type="button" data-shop-clear>Clear filters</button></p>'
     + '<button type="button" class="stan-show-all" hidden></button></div>';
   const grid = shop.querySelector('.stan-catalog');
+  const controls = shop.querySelector('#shop-filters');
   const search = shop.querySelector('input[type="search"]');
   const collectionFilter = shop.querySelector('.stan-collection-filter');
   const typeFilter = shop.querySelector('.stan-type-filter');
@@ -125,6 +155,7 @@ export function mountShop({ shop, dialog }) {
   const reset = shop.querySelector('.stan-filter-reset');
   const noMatches = shop.querySelector('.stan-no-matches');
   const showAll = shop.querySelector('.stan-show-all');
+  mountShopFan(shop.querySelector('.stan-shop-opening'));
 
   function renderCatalog() {
     const keywords = searchWords(search.value).split(' ').filter(Boolean);
@@ -452,7 +483,7 @@ export function mountShop({ shop, dialog }) {
       case 'browse':
         lastTrigger = undefined;
         closeDialog();
-        shop.scrollIntoView();
+        controls.scrollIntoView();
         shop.querySelector('[data-product]')?.focus({ preventScroll: true });
         break;
       case 'front':
@@ -484,8 +515,9 @@ export function mountShop({ shop, dialog }) {
       if (hasCollection || hasType) {
         event.preventDefault();
         clearFilters({ collection: hasCollection ? collection : 'all', teeType: hasType ? teeType : '' });
-        shop.scrollIntoView();
-        const focusTarget = hasType ? typeFilter : shop.querySelector('#stan-shop-title');
+        if (browseLink.hash === '#shop-filters' && location.hash !== '#shop-filters') history.replaceState(null, '', '#shop-filters');
+        controls.scrollIntoView({ behavior: browseLink.hash === '#shop-filters' ? 'instant' : 'auto' });
+        const focusTarget = hasType ? typeFilter : collectionFilter;
         focusTarget.focus({ preventScroll: true });
         return;
       }

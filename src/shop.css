@@ -10,23 +10,6 @@
   padding: clamp(1.25rem, 3vw, 3rem) var(--gutter) clamp(3rem, 6vw, 6rem);
 }
 
-.stan-shop-heading {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
-  align-items: center;
-  overflow: clip;
-  min-height: clamp(275px, 27vw, 446px);
-  border: 1px solid var(--brand-ink);
-  color: var(--shop-cream);
-  background: radial-gradient(ellipse at 81% 78%, #225a91 0%, transparent 52%), var(--brand-ink);
-  isolation: isolate;
-}
-.stan-shop-heading-copy {
-  position: relative;
-  z-index: 2;
-  padding: clamp(1.3rem, 3.75vw, 3.75rem);
-}
 .stan-shop-featured {
   display: inline-flex;
   align-items: center;
@@ -41,56 +24,7 @@
   text-transform: uppercase;
   text-decoration: none;
 }
-.stan-shop-featured:hover { background: var(--shop-cream); border-color: var(--shop-cream); }
 .stan-shop-heading :focus-visible { outline-color: var(--brand-orange); }
-.stan-shop-art {
-  position: absolute;
-  inset: 0 0 0 44%;
-  overflow: clip;
-}
-.stan-shop-pattern {
-  position: absolute;
-  inset: 11% 6% 9% 5%;
-  border: 1px solid #abc5e044;
-  background-image:
-    linear-gradient(90deg, #abc5e029 1px, transparent 1px),
-    linear-gradient(#abc5e029 1px, transparent 1px);
-  background-size: clamp(18px, 2vw, 32px) clamp(18px, 2vw, 32px);
-  mask-image: linear-gradient(90deg, transparent, #000 24%);
-}
-.stan-shop-pattern::after {
-  content: '';
-  position: absolute;
-  inset: 9% 11% 10%;
-  border: 1px dashed #ffd3b18c;
-  border-radius: 50%;
-  transform: rotate(-16deg);
-}
-.stan-shop-model {
-  position: absolute;
-  inset: 8% 13% auto 0;
-  width: 87%;
-  height: 151%;
-  object-fit: contain;
-  object-position: center top;
-}
-.stan-shop-swatch {
-  position: absolute;
-  right: 11%;
-  bottom: 12%;
-  width: min(26%, 158px);
-  margin: 0;
-  padding: 5px;
-  border: 1px solid var(--brand-ink);
-  background: var(--shop-cream);
-  box-shadow: 5px 5px 0 var(--brand-orange);
-  transform: rotate(9deg);
-}
-.stan-shop-swatch img {
-  width: 100%;
-  height: auto;
-}
-
 .stan-mono {
   font-family: var(--mono, "IBM Plex Mono", monospace);
   font-size: 0.72rem;
@@ -109,12 +43,6 @@
   text-transform: uppercase;
 }
 
-.stan-shop-heading h2 {
-  font-family: var(--landing-display, var(--display));
-  font-size: clamp(3rem, 8vw, 8.5rem);
-  font-weight: 700;
-  line-height: .82;
-}
 .stan-shop-heading h2 > span { color: var(--brand-orange); }
 
 .stan-shop-tools {
@@ -432,11 +360,6 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
 }
 
 @media (max-width: 540px) {
-  .stan-shop-heading { grid-template-columns: minmax(0, 1fr); min-height: 248px; }
-  .stan-shop-heading h2 { font-size: clamp(2.75rem, 11.2vw, 4.25rem); }
-  .stan-shop-art { inset-inline-start: 43%; }
-  .stan-shop-model { inset: 9% 0 auto 0; width: 100%; height: 151%; object-fit: cover; }
-  .stan-shop-swatch { right: 10%; bottom: 10%; width: 31%; padding: 3px; box-shadow: 3px 3px 0 var(--brand-orange); }
   .stan-filter-field :is(input, select) { font-size: 0.82rem; padding-inline: 0.35rem; }
   .stan-product { grid-template-columns: minmax(0, 1fr); }
   .stan-product-art { aspect-ratio: 1.22; }
@@ -458,12 +381,4 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
   .stan-dialog-invoice :is(.stan-dialog-head, .stan-back-link, .stan-invoice-print) { display: none !important; }
   .stan-dialog-invoice .stan-dialog-body { padding: 0; }
   .stan-invoice-sample { border-color: #181818; background: #fff; color: #181818; }
-}
-
-.stan-preview-note {
-  margin: .7rem 0 0;
-  color: #fff6e0cf;
-  font: 500 .66rem/1.25 var(--mono);
-  text-transform: uppercase;
-  letter-spacing: .08em;
 }

@@ -1,0 +1,189 @@
+#shop {
+  --shop-display: "Zalando Sans Expanded", "DM Sans", sans-serif;
+}
+
+.stan-shop-opening {
+  --fan-travel: min(62svh, 485px);
+  --fan-lead: 1;
+  --fan-spread: 1;
+}
+.stan-shop-opening::after {
+  content: '';
+  display: block;
+  height: var(--fan-travel);
+}
+.stan-shop-heading {
+  position: sticky;
+  top: calc(var(--masthead-height) + 8px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 0;
+  overflow: clip;
+  padding: clamp(18px, 3vw, 42px) 2% clamp(12px, 2.5vw, 30px);
+  background:
+    radial-gradient(ellipse at 50% 76%, #225a911c, transparent 62%),
+    linear-gradient(90deg, #102c4d0a 1px, transparent 1px) center / 34px 34px,
+    linear-gradient(#102c4d0a 1px, transparent 1px) center / 34px 34px,
+    var(--shop-cream);
+  border: 1px solid var(--brand-ink);
+  color: var(--brand-ink);
+}
+.stan-shop-heading-copy { text-align: center; padding: 0; }
+.stan-shop-heading h2 {
+  font-family: var(--shop-display);
+  font-size: clamp(1.75rem, 6.7vw, 6.1rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -.075em;
+}
+.stan-shop-opening-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: .25rem .85rem;
+  margin-top: .55rem;
+}
+.stan-shop-featured, .stan-fan-skip { margin: 0; }
+.stan-fan-skip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  gap: .35rem;
+  padding: 0 .2rem;
+  font: 600 clamp(.63rem, .9vw, .78rem)/1.15 var(--mono);
+  text-underline-offset: .18em;
+}
+.stan-shop-featured:hover { background: var(--brand-ink); border-color: var(--brand-ink); color: var(--shop-cream); }
+.stan-fan-skip:hover { color: var(--brand-blue); }
+.stan-shop-fan {
+  --fan-card-width: min(25.2%, 249px);
+  --fan-card-height: clamp(210px, min(32vw, 43svh), 380px);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  min-height: calc(var(--fan-card-height) + clamp(52px, 7.7vw, 99px));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  perspective: 1100px;
+}
+.stan-fan-card {
+  --fan-x: calc(var(--fan-offset) * var(--fan-spread) * 55%);
+  --fan-y: calc(var(--fan-depth) * var(--fan-spread) * 6.7%);
+  --fan-turn: calc(var(--fan-offset) * var(--fan-spread) * 7deg);
+  --fan-size: calc(1 - var(--fan-depth) * var(--fan-spread) * .062);
+  position: absolute;
+  z-index: var(--fan-layer);
+  width: var(--fan-card-width);
+  height: var(--fan-card-height);
+  overflow: hidden;
+  border: 1px solid #102c4d44;
+  border-radius: clamp(12px, 2.2vw, 30px);
+  background: var(--fan-paper, #e9dac4);
+  box-shadow: 0 14px 27px #061d372e;
+  opacity: var(--fan-spread);
+  transform: translate3d(var(--fan-x), var(--fan-y), 0) rotate(var(--fan-turn)) scale(var(--fan-size));
+  transform-origin: center 62%;
+}
+.stan-fan-card--oat { --fan-paper: #e4cbab; }
+.stan-fan-card--sage { --fan-paper: #bfc7ab; }
+.stan-fan-card--steel { --fan-paper: #bcc9d6; }
+.stan-fan-card--blue { --fan-paper: #183b62; }
+.stan-fan-card--sand { --fan-paper: #efc992; }
+.stan-fan-card--peach { --fan-paper: #dfb199; }
+.stan-fan-card img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+.stan-fan-card:has(.stan-fan-status) img { opacity: .6; }
+.stan-fan-status {
+  position: absolute;
+  inset: auto 6px 8px;
+  width: max-content;
+  max-width: calc(100% - 12px);
+  padding: 4px 6px;
+  border-radius: 3px;
+  background: var(--shop-cream);
+  color: var(--brand-ink);
+  font: 600 clamp(.47rem, 1vw, .7rem)/1.1 var(--mono);
+  text-transform: uppercase;
+}
+.stan-fan-card--lead {
+  opacity: 1;
+  border-color: #102c4d;
+  background:
+    radial-gradient(ellipse at 48% 34%, #3378b2, transparent 68%),
+    var(--fan-paper);
+  transform: translate3d(0, calc((1 - var(--fan-lead)) * 25%), 0)
+    rotate(calc((1 - var(--fan-lead)) * -7deg)) scale(calc(.73 + .27 * var(--fan-lead)));
+}
+.stan-fan-card--lead button {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  color: var(--shop-cream);
+  background: transparent;
+  cursor: pointer;
+}
+.stan-fan-card--lead button:focus-visible { outline: 3px solid var(--brand-orange); outline-offset: -5px; }
+.stan-fan-card--lead img {
+  object-fit: cover;
+  object-position: center top;
+  transition: transform .24s ease-out;
+}
+.stan-fan-card--lead button:is(:hover, :focus-visible) img { transform: scale(1.035); }
+.stan-fan-label {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .25rem;
+  padding: .75rem .82rem;
+  background: #102c4df2;
+  text-align: left;
+  font: 600 clamp(.57rem, 1.15vw, .91rem)/1.15 var(--mono);
+}
+.stan-fan-label strong {
+  font-family: var(--shop-display);
+  font-size: clamp(.55rem, 1.4vw, .94rem);
+  letter-spacing: -.055em;
+  text-transform: uppercase;
+}
+.stan-fan-label > span { color: var(--brand-orange); white-space: nowrap; }
+.stan-catalog .stan-card-name {
+  font: 700 clamp(.7rem, 1.25vw, 1rem)/1.22 var(--shop-display);
+  letter-spacing: -.04em;
+}
+
+@media (max-width: 740px) {
+  .stan-shop-opening { --fan-travel: min(50svh, 330px); }
+  .stan-shop-fan {
+    --fan-card-width: min(31%, 164px);
+    --fan-card-height: clamp(163px, 57vw, 249px);
+  }
+  .stan-fan-card {
+    --fan-x: calc(var(--fan-offset) * var(--fan-spread) * 34%);
+    --fan-y: calc(var(--fan-depth) * var(--fan-spread) * 4%);
+    --fan-turn: calc(var(--fan-offset) * var(--fan-spread) * 6deg);
+  }
+  .stan-fan-status { display: none; }
+  .stan-fan-label { padding: .45rem .44rem; }
+}
+@media (max-height: 580px) and (min-width: 741px) {
+  .stan-shop-fan { --fan-card-height: clamp(142px, 41svh, 238px); }
+  .stan-shop-heading h2 { font-size: clamp(1.75rem, 9.5svh, 4.8rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stan-shop-opening { --fan-travel: 0px; }
+  .stan-shop-heading { position: relative; top: auto; }
+  .stan-fan-card--lead img { transition: none; }
+}
+
