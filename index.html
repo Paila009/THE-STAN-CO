@@ -13,7 +13,10 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <div class="opening-slate" hidden aria-hidden="true"><span>The Stan Co.</span></div>
+  <div class="opening-slate" hidden aria-hidden="true">
+    <div class="opening-slate__thread"></div>
+    <div class="opening-slate__label"><span>The Stan Co.</span></div>
+  </div>
   <header class="masthead">
     <a class="wordmark" href="#top" aria-label="The Stan Co. home">
       <span>THE STAN CO<span class="wordmark-dot">.</span></span>
@@ -49,10 +52,13 @@
           </div>
         </div>
         <div class="premiere-lookbook">
+          <div class="premiere-scan" aria-hidden="true"></div>
           <svg class="premiere-pattern" aria-hidden="true" viewBox="0 0 570 520" fill="none">
-            <path class="premiere-pattern__outline" pathLength="1" d="M201 64 233 48 Q284 85 341 48L375 65 479 126 553 231 477 284 431 240 431 466 156 466 156 240 111 281 36 224 110 120Z"/>
+            <defs><path id="hero-sewing-outline" pathLength="1" d="M201 64 233 48 Q284 85 341 48L375 65 479 126 553 231 477 284 431 240 431 466 156 466 156 240 111 281 36 224 110 120Z"/></defs>
+            <use class="premiere-pattern__outline" href="#hero-sewing-outline"/>
             <path class="premiere-pattern__seam" d="M224 54Q278 110 350 54M49 217 119 266M464 272l75-52M157 449h274M474 126Q435 174 431 240M112 120q42 54 44 120"/>
             <path class="premiere-pattern__marks" d="M29 80V54h24m475 0h24v26M24 430v24h25m477 0h24v-24M287 128v267m-8-260 8-8 8 8m-16 252 8 8 8-8"/>
+            <use class="premiere-pattern__trace" href="#hero-sewing-outline"/>
           </svg>
           <div class="premiere-feature">
             <img src="/images/hero-graphic-tee.webp" alt="Washed charcoal T-shirt with a cobalt brushstroke print across the back" width="929" height="1130" fetchpriority="high">
@@ -61,6 +67,7 @@
             <span class="premiere-garment__image"><img src="/images/static-zip-hoodie-front.webp" alt="" width="780" height="900" decoding="async"></span>
             <span class="premiere-garment__name">Static Zip Hoodie <span aria-hidden="true">↗</span></span>
           </a>
+          <button class="premiere-motion" type="button" data-hero-motion hidden>Pause animation</button>
         </div>
       </div>
       <nav class="premiere-foot" aria-label="Shop by category">
