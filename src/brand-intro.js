@@ -1,6 +1,6 @@
 import './brand-intro.css';
 
-export function mountBrandIntro(screen, { heroImage, onReveal, onSkip }) {
+export function mountBrandIntro(screen, { onReveal, onSkip }) {
   if (screen.hidden) return;
   if (window.scrollY > 80) {
     screen.hidden = true;
@@ -8,75 +8,70 @@ export function mountBrandIntro(screen, { heroImage, onReveal, onSkip }) {
   }
 
   const skipButton = screen.querySelector('[data-intro-skip]');
-  const sculpture = screen.querySelector('.opening-slate__scene');
-  const startedAt = performance.now();
-  let active = true;
-  let disposeScene;
-  let revealTimer;
-  let exitTimer;
-  let closeTimer;
-  let sceneModule;
+  const video = screen.querySelector('video');
   const abort = new AbortController();
+  const { signal } = abort;
+  let timer;
 
-  function close() {
-    if (!active) return;
-    active = false;
-    clearTimeout(revealTimer);
-    clearTimeout(exitTimer);
-    clearTimeout(closeTimer);
-    abort.abort();
-    disposeScene?.();
-    screen.hidden = true;
+  function rememberIntro() {
+    try { localStorage.setItem(screen.dataset.seenKey, '1'); } catch {}
   }
 
-  function skip(moveFocus = false) {
-    if (!active) return;
-    close();
-    onSkip(moveFocus);
+  function close() {
+    if (signal.aborted) return;
+    abort.abort();
+    clearTimeout(timer);
+    screen.hidden = true;
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
   }
 
   function reveal() {
-    if (!active || screen.dataset.phase) return;
-    clearTimeout(revealTimer);
-    screen.dataset.phase = 'brand';
-    disposeScene = sceneModule?.mountBrandScene(sculpture);
-    exitTimer = setTimeout(() => {
-      screen.dataset.phase = 'exit';
-      onReveal();
-      closeTimer = setTimeout(() => {
-        const moveFocus = document.activeElement === skipButton;
-        close();
-        if (moveFocus) onSkip(true);
-      }, 520);
-    }, 1460);
+    if (signal.aborted || screen.dataset.phase === 'exit') return;
+    clearTimeout(timer);
+    rememberIntro();
+    screen.dataset.phase = 'exit';
+    video.pause();
+    onReveal();
+    timer = window.setTimeout(() => {
+      const moveFocus = document.activeElement === skipButton;
+      close();
+      if (moveFocus) onSkip();
+    }, 520);
   }
 
-  const signal = abort.signal;
-  skipButton.addEventListener('click', () => skip(true), { signal });
+  video.addEventListener('playing', () => {
+    if (screen.dataset.phase === 'exit') return;
+    if (!screen.dataset.phase) {
+      screen.dataset.phase = 'video';
+      screen.classList.add('has-video');
+      rememberIntro();
+      clearTimeout(timer);
+      // A connection that stalls during playback must still reveal the homepage.
+      const duration = Number.isFinite(video.duration) ? video.duration : 8;
+      timer = window.setTimeout(reveal, (duration + 3) * 1000);
+    }
+  }, { signal });
+  video.addEventListener('ended', reveal, { signal, once: true });
+  video.addEventListener('error', reveal, { signal, once: true });
+  skipButton.addEventListener('click', reveal, { signal });
   window.addEventListener('keydown', event => {
-    if (event.key === 'Escape') skip(document.activeElement === skipButton);
+    if (event.key === 'Escape') reveal();
   }, { signal });
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 80) skip();
+    if (window.scrollY > 80) close();
   }, { signal, passive: true });
   window.addEventListener('hashchange', () => {
-    if (location.hash && location.hash !== '#top') skip();
+    if (location.hash && location.hash !== '#top') close();
   }, { signal });
   window.addEventListener('pagehide', close, { signal });
 
-  revealTimer = setTimeout(reveal, 900);
+  screen.classList.add('is-managed');
+  timer = window.setTimeout(reveal, 2600);
+  video.muted = true;
+  video.src = video.dataset.src;
+  video.play().catch(reveal);
 
-  Promise.allSettled([
-    heroImage.decode(),
-    import('./brand-scene.js').then(module => {
-      if (active) sceneModule = module;
-    }),
-  ]).then(() => {
-    if (!active || screen.dataset.phase) return;
-    clearTimeout(revealTimer);
-    revealTimer = setTimeout(reveal, Math.max(0, 450 - performance.now() + startedAt));
-  });
-
-  return { active: () => active, skip };
+  return { active: () => !signal.aborted && screen.dataset.phase !== 'exit', close };
 }
-

@@ -134,23 +134,19 @@ export function mountOpening(hero) {
   const lookbook = hero.querySelector('.premiere-lookbook');
   let visible = true;
   let scrollFrame = 0;
-  let openingTimeout;
 
   const intro = mountBrandIntro(document.querySelector('.opening-slate'), {
-    heroImage: hero.querySelector('.premiere-feature img'),
     onReveal() {
       hero.classList.add('is-opening');
-      openingTimeout = window.setTimeout(() => hero.classList.remove('is-opening'), 1550);
+      window.setTimeout(() => hero.classList.remove('is-opening'), 1550);
     },
-    onSkip(moveFocus) {
-      if (moveFocus) hero.querySelector('h1').focus({ preventScroll: true });
+    onSkip() {
+      hero.querySelector('h1').focus({ preventScroll: true });
     },
   });
 
   function finishOpening() {
-    intro?.skip();
-    clearTimeout(openingTimeout);
-    hero.classList.remove('is-opening');
+    if (intro?.active()) intro.close();
   }
 
   function resetPointer() {
