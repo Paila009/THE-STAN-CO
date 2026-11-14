@@ -3,9 +3,10 @@ import * as THREE from 'three';
 export const PROJECTOR_ENTRY_MS = 1650;
 
 const entryDuration = PROJECTOR_ENTRY_MS / 1000;
-const blue = 0x6f96ff;
-const metal = new THREE.MeshStandardMaterial({ color: 0x555c6a, metalness: .82, roughness: .29 });
-const trim = new THREE.MeshStandardMaterial({ color: blue, metalness: .38, roughness: .28, emissive: 0x173568, emissiveIntensity: .36 });
+const brandBlue = 0x1163af;
+const blueLight = 0x79b8fa;
+const metal = new THREE.MeshStandardMaterial({ color: 0x223957, metalness: .72, roughness: .33 });
+const trim = new THREE.MeshStandardMaterial({ color: brandBlue, metalness: .34, roughness: .27, emissive: 0x123967, emissiveIntensity: .42 });
 
 function addRing(group, radius, tube, z, material) {
   const ring = new THREE.Mesh(new THREE.TorusGeometry(radius, tube, 10, 90), material);
@@ -35,7 +36,7 @@ function reelBody() {
     depth: .105, bevelEnabled: true, bevelSize: .047, bevelThickness: .05,
     bevelSegments: 3, curveSegments: 40, steps: 1,
   });
-  const rimMaterial = new THREE.MeshStandardMaterial({ color: 0x929db1, metalness: .76, roughness: .25 });
+  const rimMaterial = new THREE.MeshStandardMaterial({ color: 0xaebcdb, metalness: .68, roughness: .25 });
   for (const z of [-.38, .275]) {
     const plate = new THREE.Mesh(plateGeometry, [metal, rimMaterial]);
     plate.position.z = z;
@@ -54,21 +55,21 @@ function filmTexture() {
   canvas.width = 1536;
   canvas.height = 160;
   const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#121626';
+  ctx.fillStyle = '#102c4d';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   const frame = canvas.width / 12;
   for (let i = 0; i < 12; i++) {
     const left = i * frame;
-    ctx.fillStyle = i % 3 === 1 ? '#658aff' : '#35466d';
+    ctx.fillStyle = i === 8 ? '#fe914c' : i % 3 === 1 ? '#4484cc' : '#225284';
     ctx.fillRect(left + 7, 35, frame - 14, 90);
-    ctx.strokeStyle = '#a8c3ff9c';
+    ctx.strokeStyle = '#a8caff9c';
     ctx.strokeRect(left + 7, 35, frame - 14, 90);
-    ctx.fillStyle = '#e0e9ff';
+    ctx.fillStyle = '#edf1ff';
     ctx.fillRect(left + 13, 9, 20, 10);
     ctx.fillRect(left + 76, 9, 20, 10);
     ctx.fillRect(left + 13, 141, 20, 10);
     ctx.fillRect(left + 76, 141, 20, 10);
-    ctx.fillStyle = '#c7d9ff';
+    ctx.fillStyle = '#ccd8ff';
     ctx.font = 'bold 9px monospace';
     ctx.fillText(String(i + 1).padStart(2, '0'), left + 10, 33);
     ctx.beginPath();
@@ -76,7 +77,7 @@ function filmTexture() {
     ctx.lineTo(left + 100, 44);
     ctx.lineTo(left + 119, 44);
     ctx.lineTo(left + 36, 114);
-    ctx.fillStyle = '#cadcff40';
+    ctx.fillStyle = '#d7e3ff40';
     ctx.fill();
   }
   const texture = new THREE.CanvasTexture(canvas);
@@ -93,7 +94,7 @@ function filmStrip() {
   geometry.attributes.normal.setUsage(THREE.DynamicDrawUsage);
   const material = new THREE.MeshStandardMaterial({
     map: filmTexture(), color: 0xffffff, side: THREE.DoubleSide, roughness: .52, metalness: .25,
-    emissive: 0x293c76, emissiveIntensity: .2,
+    emissive: 0x172953, emissiveIntensity: .22,
   });
   const mesh = new THREE.Mesh(geometry, material);
   mesh.frustumCulled = false;
@@ -142,13 +143,13 @@ export function mountProjector(hero, { entryElapsed = 0 } = {}) {
   const reel = reelBody();
   const film = filmStrip();
   group.add(film.mesh, reel);
-  scene.add(group, new THREE.HemisphereLight(0xe1e8fa, 0x151927, 2.65));
+  scene.add(group, new THREE.HemisphereLight(0xe4ecff, 0x263257, 2.55));
 
-  const key = new THREE.DirectionalLight(0xf5f7ff, 4);
+  const key = new THREE.DirectionalLight(0xf1f5ff, 4);
   key.position.set(3, 3, 6);
-  const blueRim = new THREE.DirectionalLight(blue, 4.2);
+  const blueRim = new THREE.DirectionalLight(blueLight, 4.2);
   blueRim.position.set(-4, -1, -2);
-  const bounce = new THREE.DirectionalLight(0xaeb7d3, 2.25);
+  const bounce = new THREE.DirectionalLight(0xffdbc6, 1.45);
   bounce.position.set(-2, 5, 2);
   scene.add(key, blueRim, bounce);
 

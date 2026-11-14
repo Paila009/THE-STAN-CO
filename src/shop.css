@@ -1,6 +1,6 @@
 #shop {
-  background: var(--paper, #fafaf8);
-  color: var(--ink, #171410);
+  background: var(--paper, #fff8f1);
+  color: var(--brand-ink, #102c4d);
   scroll-margin-top: 5rem;
 }
 
@@ -37,39 +37,39 @@
 .stan-shop-kicker::before {
   width: 0.55rem;
   height: 0.55rem;
-  background: var(--accent, #9fbaff);
-  border: 1px solid #181818;
+  background: var(--brand-orange, #fe914c);
+  border: 1px solid var(--brand-ink, #102c4d);
   content: "";
 }
 
 .stan-shop-heading h2,
 .stan-dialog-head h2 {
   margin: 0;
-  font-family: var(--display, "Archivo Black", sans-serif);
-  font-weight: 900;
+  font-family: var(--display, "Barlow Semi Condensed", sans-serif);
+  font-weight: 600;
   line-height: 0.9;
-  letter-spacing: -0.045em;
+  letter-spacing: -.025em;
   text-transform: uppercase;
 }
 
 .stan-shop-heading h2 { font-size: clamp(2.55rem, 6.5vw, 7rem); }
-.stan-shop-heading h2 > span { color: #202020; }
+.stan-shop-heading h2 > span { color: var(--brand-blue, #1163af); }
 
 .stan-shop-tools {
   display: grid;
   grid-template-columns: minmax(12rem, 1.6fr) repeat(4, minmax(7rem, 1fr));
   gap: 0.75rem;
   padding: 1rem 0;
-  border-top: 1px solid #d4d4cf;
-  border-bottom: 1px solid #d4d4cf;
+  border-top: 1px solid var(--line, #e7d6c6);
+  border-bottom: 1px solid var(--line, #e7d6c6);
 }
 .stan-filter-field { min-width: 0; display: grid; gap: 0.35rem; align-self: start; }
-.stan-filter-field > span { font-size: 0.76rem; font-weight: 700; }
+.stan-filter-field > span { font-size: 0.76rem; font-weight: 600; }
 .stan-filter-field :is(input, select) {
   min-height: 2.75rem;
   min-width: 0;
   width: 100%;
-  border: 1px solid #d4d4cf;
+  border: 1px solid #728094;
   padding: 0.5rem 0.6rem;
   background: #fff;
   color: inherit;
@@ -77,7 +77,7 @@
   font-size: 0.88rem;
 }
 .stan-filter-field select { cursor: pointer; }
-.stan-result-count { margin: 0.8rem 0; color: #565653; font-size: 0.82rem; }
+.stan-result-count { margin: 0.8rem 0; color: #495969; font-size: 0.82rem; }
 .stan-catalog { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(1.35rem, 2.4vw, 2.4rem) clamp(0.65rem, 1.5vw, 1.55rem); }
 .stan-no-matches { margin: 1.5rem 0 0; }
 .stan-no-matches button { border: 0; background: none; color: inherit; text-decoration: underline; }
@@ -86,11 +86,11 @@
   min-height: 2.75rem;
   margin: clamp(1.65rem, 3.5vw, 2.75rem) auto 0;
   padding: 0.55rem 1.4rem;
-  border: 1px solid #181818;
+  border: 1px solid var(--brand-ink, #102c4d);
   background: #fff;
-  font-weight: 700;
+  font-weight: 600;
 }
-.stan-show-all:hover { background: var(--accent, #9fbaff); }
+.stan-show-all:hover { background: var(--brand-orange, #fe914c); }
 .stan-show-all[hidden] { display: none; }
 
 .stan-card { min-width: 0; }
@@ -113,7 +113,7 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: 0.91;
-  background: #eeefed;
+  background: #f7ebdf;
   isolation: isolate;
 }
 
@@ -139,10 +139,10 @@
   height: 1.95rem;
   place-items: center;
   background: #fff;
-  border: 1px solid #deded9;
+  border: 1px solid var(--line, #e7d6c6);
   font-size: 1rem;
 }
-.stan-card-button:is(:hover, :focus-visible) .stan-card-open { background: var(--accent, #9fbaff); border-color: #181818; }
+.stan-card-button:is(:hover, :focus-visible) .stan-card-open { background: var(--brand-orange, #fe914c); border-color: var(--brand-ink, #102c4d); }
 
 .stan-card-meta {
   display: flex;
@@ -152,9 +152,9 @@
   justify-content: space-between;
   margin-top: 0.8rem;
 }
-.stan-card-name { margin: 0; font-size: clamp(1rem, 1.4vw, 1.25rem); letter-spacing: -0.03em; font-weight: 800; }
-.stan-card-price { font-size: 0.9rem; font-weight: 700; white-space: nowrap; }
-.stan-card-color { display: block; margin: 0.25rem 0 0; color: #585854; font-size: 0.82rem; }
+.stan-card-name { margin: 0; font-size: clamp(1rem, 1.4vw, 1.25rem); letter-spacing: -0.03em; font-weight: 600; }
+.stan-card-price { font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.stan-card-color { display: block; margin: 0.25rem 0 0; color: #495969; font-size: 0.82rem; }
 
 .stan-visually-hidden {
   position: absolute;
@@ -173,16 +173,16 @@
   max-height: calc(100dvh - 2rem);
   padding: 0;
   margin: auto;
-  border: 1px solid #161616;
+  border: 1px solid var(--brand-ink, #102c4d);
   overflow-y: auto;
   overscroll-behavior: contain;
-  background: var(--paper, #fafaf8);
-  color: var(--ink, #171410);
+  background: var(--paper, #fff8f1);
+  color: var(--brand-ink, #102c4d);
 }
 
 .stan-dialog-wide { width: min(100% - 2rem, 57rem); }
 .stan-dialog-invoice { width: min(100% - 2rem, 46rem); }
-.stan-dialog::backdrop { background: rgb(0 0 0 / 58%); }
+.stan-dialog::backdrop { background: rgb(16 44 77 / 62%); }
 html:has(.stan-dialog[open]) { overflow: hidden; }
 
 .stan-dialog-head {
@@ -191,7 +191,7 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem clamp(1rem, 3.3vw, 1.8rem);
-  border-bottom: 1px solid #d6d6d2;
+  border-bottom: 1px solid var(--line, #e7d6c6);
 }
 
 .stan-dialog-head h2 { font-size: clamp(1.65rem, 5vw, 2.65rem); }
@@ -199,7 +199,7 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
 .stan-dialog-close {
   min-width: 2.75rem;
   min-height: 2.75rem;
-  border: 1px solid #d6d6d2;
+  border: 1px solid #728094;
   background: transparent;
   color: inherit;
   font: inherit;
@@ -207,7 +207,7 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
   line-height: 1;
   cursor: pointer;
 }
-.stan-dialog-close:hover { border-color: #161616; }
+.stan-dialog-close:hover { border-color: var(--brand-blue, #1163af); }
 .stan-dialog-body { padding: clamp(1rem, 3.3vw, 1.8rem); }
 .stan-dialog-body button { color: inherit; font-family: inherit; }
 
@@ -219,10 +219,10 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
 .stan-product-art.is-dragging { cursor: grabbing; }
 .stan-product-art.is-rendering > img { opacity: 0; }
 .stan-product-art.is-rendering .stan-product-render { opacity: 1; }
-.stan-viewer-status { margin: .4rem 0 0; color: #565653; font-size: .78rem; }
+.stan-viewer-status { margin: .4rem 0 0; color: #495969; font-size: .78rem; }
 .stan-viewer-status:empty { display: none; }
 .stan-product-details p { margin: 0.65rem 0; }
-.stan-product-price { font-size: 1.5rem; font-weight: 800; }
+.stan-product-price { font-size: 1.5rem; font-weight: 600; }
 .stan-swatch { display: inline-block; width: 0.85rem; height: 0.85rem; margin-right: 0.45rem; border: 1px solid #888; background: var(--swatch); vertical-align: -0.05rem; }
 .stan-sides, .stan-sizes { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .stan-sides { margin-top: 0.5rem; }
@@ -233,25 +233,29 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
   min-width: 2.7rem;
   min-height: 2.7rem;
   padding: 0.25rem 0.6rem;
-  border: 1px solid #d4d4cf;
+  border: 1px solid #728094;
   background: transparent;
   font-size: 0.84rem;
   cursor: pointer;
 }
 
 .stan-sides button[aria-pressed="true"],
-.stan-sizes button[aria-pressed="true"] { border-color: #151515; background: #161616; color: #fff; }
+.stan-sizes button[aria-pressed="true"] {
+  border-color: var(--brand-blue, #1163af);
+  background: var(--brand-blue, #1163af);
+  color: #fff;
+}
 .stan-sizes button:disabled,
 .stan-quantity button:disabled { opacity: 0.45; cursor: not-allowed; }
 .stan-size-row { display: flex; justify-content: space-between; align-items: center; margin: 1.2rem 0 0.5rem; }
 .stan-link-button { border: 0; padding: 0.4rem 0; background: none; text-decoration: underline; text-underline-offset: 0.15em; font-size: 0.88rem; cursor: pointer; }
-.stan-size-guide { margin-bottom: 0.75rem; padding: 0.75rem; background: #eeefed; font-size: 0.8rem; }
+.stan-size-guide { margin-bottom: 0.75rem; padding: 0.75rem; background: #f7ebdf; font-size: 0.8rem; }
 .stan-size-guide caption { text-align: left; margin-bottom: 0.3rem; }
 .stan-size-guide table { width: 100%; border-collapse: collapse; }
 .stan-size-guide :is(td, th) { text-align: left; padding: 0.2rem 0.35rem; }
 .stan-status { min-height: 1.25rem; font-size: 0.82rem; color: #a02621; }
 
-.stan-cta {
+.stan-dialog-body .stan-cta {
   display: flex;
   width: 100%;
   min-height: 3rem;
@@ -259,50 +263,50 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
   align-items: center;
   gap: 0.6rem;
   padding: 0.65rem 0.85rem;
-  border: 1px solid #161616;
-  background: var(--accent, #9fbaff);
-  color: #161616;
-  font: 800 0.93rem var(--display, "Archivo Black", sans-serif);
+  border: 1px solid var(--brand-ink, #102c4d);
+  background: var(--brand-orange, #fe914c);
+  color: var(--brand-ink, #102c4d);
+  font: 600 0.93rem var(--display, "Barlow Semi Condensed", sans-serif);
   cursor: pointer;
 }
-.stan-cta:hover { background: #161616; color: #fff; }
-.stan-exchanges { margin-top: 1rem; border-top: 1px solid #d6d6d2; padding-top: 0.65rem; font-size: 0.88rem; }
-.stan-exchanges summary { font-weight: 700; cursor: pointer; }
-.stan-exchanges p { color: #585854; }
+.stan-dialog-body .stan-cta:hover { border-color: var(--brand-blue, #1163af); background: var(--brand-blue, #1163af); color: #fff; }
+.stan-exchanges { margin-top: 1rem; border-top: 1px solid var(--line, #e7d6c6); padding-top: 0.65rem; font-size: 0.88rem; }
+.stan-exchanges summary { font-weight: 600; cursor: pointer; }
+.stan-exchanges p { color: #495969; }
 
-.stan-empty { margin: 0 0 1.5rem; color: #585854; }
+.stan-empty { margin: 0 0 1.5rem; color: #495969; }
 .stan-bag-lines { display: grid; gap: 0.95rem; list-style: none; margin: 0 0 1rem; padding: 0; }
 .stan-bag-item { display: grid; grid-template-columns: 4.4rem minmax(0, 1fr) auto; gap: 0.75rem; align-items: start; }
-.stan-bag-item img { width: 100%; height: auto; background: #eeefed; object-fit: contain; }
-.stan-bag-item h3 { margin: 0; font-size: 1rem; line-height: 1.2; }
-.stan-bag-item p { margin: 0.25rem 0; color: #585854; font-size: 0.78rem; }
-.stan-bag-item > strong { font-size: 0.88rem; }
+.stan-bag-item img { width: 100%; height: auto; background: #f7ebdf; object-fit: contain; }
+.stan-bag-item h3 { margin: 0; font-size: 1rem; font-weight: 600; line-height: 1.2; }
+.stan-bag-item p { margin: 0.25rem 0; color: #495969; font-size: 0.78rem; }
+.stan-bag-item > strong { font-size: 0.88rem; font-weight: 600; }
 .stan-quantity { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; }
 .stan-quantity button { min-width: 2.15rem; min-height: 2.15rem; }
 .stan-quantity > span { min-width: 1.35rem; text-align: center; }
 .stan-quantity .stan-remove { border-color: transparent; padding-inline: 0.2rem; text-decoration: underline; }
-.stan-total { display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-top: 1px solid #d6d6d2; padding-top: 0.8rem; font-weight: 700; }
-.stan-muted { margin: 0.6rem 0 1.1rem; font-size: 0.85rem; color: #585854; }
+.stan-total { display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-top: 1px solid var(--line, #e7d6c6); padding-top: 0.8rem; font-weight: 600; }
+.stan-muted { margin: 0.6rem 0 1.1rem; font-size: 0.85rem; color: #495969; }
 .stan-back-link { margin-bottom: 0.8rem; }
 
-.stan-demo { display: grid; grid-template-columns: auto 1fr; gap: 0.9rem; align-items: center; padding: 0.85rem; background: #eeefed; margin: 0.6rem 0 1rem; }
+.stan-demo { display: grid; grid-template-columns: auto 1fr; gap: 0.9rem; align-items: center; padding: 0.85rem; background: #f7ebdf; margin: 0.6rem 0 1rem; }
 .stan-demo p, .stan-demo h3 { margin: 0.2rem 0; }
-.stan-demo h3 { font-size: 1.1rem; }
+.stan-demo h3 { font-size: 1.1rem; font-weight: 600; }
 .stan-demo p { font-size: 0.82rem; }
 .stan-qr-box { display: grid; width: min(34vw, 9rem); aspect-ratio: 1; place-items: center; padding: 0.2rem; background: #fff; }
 .stan-qr-box canvas { display: block; width: 100% !important; height: auto !important; image-rendering: pixelated; }
 .stan-token { overflow-wrap: anywhere; }
 
-.stan-invoice { padding: clamp(0.8rem, 2.5vw, 1.5rem); border: 1px solid #d6d6d2; background: #fff; }
+.stan-invoice { padding: clamp(0.8rem, 2.5vw, 1.5rem); border: 1px solid var(--line, #e7d6c6); background: #fff; }
 .stan-invoice-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.stan-invoice-head > strong { font-family: var(--display, "Archivo Black", sans-serif); }
-.stan-invoice-sample { padding: 0.25rem 0.45rem; border: 1px solid #181818; background: var(--accent, #9fbaff); color: #181818; }
+.stan-invoice-head > strong { font-family: var(--display, "Barlow Semi Condensed", sans-serif); font-weight: 600; }
+.stan-invoice-sample { padding: 0.25rem 0.45rem; border: 1px solid var(--brand-ink, #102c4d); background: var(--brand-orange, #fe914c); color: var(--brand-ink, #102c4d); }
 .stan-invoice-info { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.65rem; font-size: 0.78rem; }
-.stan-invoice-info p { margin: 0.15rem 0 0.7rem; color: #585854; }
+.stan-invoice-info p { margin: 0.15rem 0 0.7rem; color: #495969; }
 .stan-invoice table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-.stan-invoice table :is(td, th) { border-top: 1px solid #d6d6d2; padding: 0.45rem 0.2rem; text-align: right; }
+.stan-invoice table :is(td, th) { border-top: 1px solid var(--line, #e7d6c6); padding: 0.45rem 0.2rem; text-align: right; }
 .stan-invoice table :is(td, th):first-child { padding-left: 0; text-align: left; }
-.stan-invoice table small { display: block; font-weight: 400; color: #585854; }
+.stan-invoice table small { display: block; font-weight: 400; color: #495969; }
 .stan-invoice .stan-total { font-size: 0.88rem; }
 .stan-invoice .stan-muted { margin-bottom: 0; }
 .stan-invoice-print { margin-top: 0.85rem; }
@@ -339,11 +343,11 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
   .stan-dialog-invoice::backdrop { background: transparent; }
   .stan-dialog-invoice :is(.stan-dialog-head, .stan-back-link, .stan-invoice-print) { display: none !important; }
   .stan-dialog-invoice .stan-dialog-body { padding: 0; }
-  .stan-invoice-sample { border-color: #181818; color: #181818; }
+  .stan-invoice-sample { border-color: #181818; background: #fff; color: #181818; }
 }
 
 .stan-preview-note {
   margin: .6rem 0 0;
-  color: #565653;
+  color: #495969;
   font-size: .81rem;
 }

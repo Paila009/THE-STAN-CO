@@ -1,10 +1,12 @@
 .cinema {
-  --cinema-ink: #151515;
-  --cinema-paper: #fff;
-  --cinema-accent: var(--accent);
-  --cinema-rule: #deded9;
-  --cinema-display: 'Archivo Black', 'Arial Black', sans-serif;
-  --cinema-mono: 'IBM Plex Mono', monospace;
+  --cinema-ink: var(--brand-ink, #102c4d);
+  --cinema-blue: var(--brand-blue, #1163af);
+  --cinema-paper: var(--paper, #fff8f1);
+  --cinema-accent: var(--brand-orange, #fe914c);
+  --cinema-rule: color-mix(in srgb, var(--cinema-ink) 22%, var(--cinema-paper));
+  --cinema-display: var(--display, 'Barlow Semi Condensed', sans-serif);
+  --cinema-body: var(--body, 'DM Sans', sans-serif);
+  --cinema-mono: var(--mono, 'IBM Plex Mono', monospace);
   background: var(--cinema-paper);
   color: var(--cinema-ink);
   width: 100%;
@@ -27,6 +29,7 @@
 .cinema__intro p:first-child,
 .cinema__index {
   margin: 0 0 1rem;
+  color: var(--cinema-blue);
   font: 500 0.72rem/1.4 var(--cinema-mono);
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -34,8 +37,8 @@
 
 .cinema__intro h2 {
   margin: 0;
-  font: 400 clamp(2.5rem, 7vw, 7.7rem)/0.91 var(--cinema-display);
-  letter-spacing: -0.085em;
+  font: 700 clamp(2.5rem, 7vw, 7.7rem)/0.91 var(--cinema-display);
+  letter-spacing: -0.036em;
   text-transform: uppercase;
 }
 
@@ -46,8 +49,8 @@
 
 .cinema__intro p:last-child {
   margin: clamp(1rem, 2vw, 1.5rem) 0 0;
-  font: 500 clamp(0.9rem, 1.4vw, 1.13rem)/1.5 'DM Sans', sans-serif;
-  color: #424242;
+  font: 500 clamp(0.9rem, 1.4vw, 1.13rem)/1.5 var(--cinema-body);
+  color: #43536a;
 }
 
 .cinema__scene {
@@ -95,7 +98,7 @@
   place-items: center;
   container-type: inline-size;
   overflow: hidden;
-  background: radial-gradient(ellipse at 44% 34%, #fff, #e7e7e3 88%);
+  background: radial-gradient(ellipse at 44% 34%, var(--cinema-blue), #0b213d 88%);
   aspect-ratio: 1.22;
   perspective: 720px;
   perspective-origin: 50% 48%;
@@ -109,12 +112,12 @@
 .cinema__title-card {
   z-index: 1;
   width: 85%;
-  color: var(--art-ink);
+  color: var(--cinema-paper);
   opacity: 0;
   text-align: center;
   text-wrap: balance;
   pointer-events: none;
-  font: 800 clamp(1.6rem, 9cqw, 4.3rem)/1.17 'Noto Sans Telugu', Gautami, sans-serif;
+  font: 500 clamp(1.6rem, 9cqw, 4.3rem)/1.17 'Noto Sans Telugu', Gautami, sans-serif;
 }
 
 .cinema__volume {
@@ -135,7 +138,7 @@
 .cinema__back {
   inset: 0;
   transform: translateZ(calc(var(--poster-depth) * -1));
-  box-shadow: 1.3rem 2.35rem 2.5rem rgb(12 12 12 / 0.23);
+  box-shadow: 1.3rem 2.35rem 2.5rem #0716296b;
 }
 
 .cinema__edge--left,
@@ -265,8 +268,8 @@
 .cinema__poster-type {
   position: relative;
   padding-top: 0.1em;
-  font: 400 clamp(2.15rem, 14cqw, 6.8rem)/0.88 var(--cinema-display);
-  letter-spacing: -0.09em;
+  font: 700 clamp(2.15rem, 14cqw, 6.8rem)/0.88 var(--cinema-display);
+  letter-spacing: -0.043em;
   text-transform: uppercase;
 }
 
@@ -277,7 +280,7 @@
 .cinema__poster-type small {
   display: block;
   margin-top: 0.33em;
-  font: 800 clamp(0.6rem, 3.05cqw, 1.45rem)/1.2 'Noto Sans Telugu', Gautami, sans-serif;
+  font: 500 clamp(0.6rem, 3.05cqw, 1.45rem)/1.2 'Noto Sans Telugu', Gautami, sans-serif;
   letter-spacing: normal;
 }
 
@@ -287,22 +290,22 @@
 
 .cinema__copy h3 {
   margin: 0;
-  font: 400 clamp(2.3rem, 6vw, 6.25rem)/0.9 var(--cinema-display);
-  letter-spacing: -0.084em;
+  font: 600 clamp(2.3rem, 6vw, 6.25rem)/0.9 var(--cinema-display);
+  letter-spacing: -0.036em;
   text-transform: uppercase;
 }
 
 .cinema__song {
   margin: 0.65rem 0 1.15rem;
-  font: 700 clamp(1.03rem, 2vw, 1.6rem)/1.2 'DM Sans', sans-serif;
+  font: 600 clamp(1.03rem, 2vw, 1.6rem)/1.2 var(--cinema-body);
   letter-spacing: -0.045em;
 }
 
 .cinema__description {
   max-width: 29rem;
   margin: 0 0 1.4rem;
-  color: #454545;
-  font: 400 0.96rem/1.5 'DM Sans', sans-serif;
+  color: #43536a;
+  font: 400 0.96rem/1.5 var(--cinema-body);
 }
 
 .cinema__actions {
@@ -318,7 +321,7 @@
   align-items: center;
   gap: 0.75rem;
   min-height: 44px;
-  font: 700 0.85rem/1.2 'DM Sans', sans-serif;
+  font: 650 0.85rem/1.2 var(--cinema-body);
   color: var(--cinema-ink);
   text-decoration: none;
 }
@@ -330,12 +333,13 @@
 }
 
 .cinema__product:hover {
-  background: var(--cinema-ink);
+  background: var(--cinema-blue);
   color: var(--cinema-paper);
 }
 
 .cinema__track {
   padding: 0.7rem 0;
+  color: var(--cinema-blue);
   text-decoration: underline;
   text-underline-offset: 0.24em;
 }
