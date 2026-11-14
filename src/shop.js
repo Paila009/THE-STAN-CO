@@ -94,20 +94,25 @@ export function mountShop({ shop, dialog }) {
   const initialLimit = 8;
   let expanded = false;
 
-  shop.innerHTML = '<div class="stan-shop-shell"><div class="stan-shop-heading">'
-    + '<div><p class="stan-mono stan-shop-kicker">The Stan Co.</p><h2 id="stan-shop-title" tabindex="-1">Shop the drop<span>.</span></h2><p class="stan-preview-note">Concept prices and availability</p></div></div>'
-    + '<div class="stan-shop-tools" aria-label="Filter and sort clothing">'
-    + '<label class="stan-filter-field stan-search"><span>Search clothing</span><input type="search" placeholder="Product, collection, colour or style"></label>'
-    + '<label class="stan-filter-field"><span>Collection</span><select class="stan-collection-filter">'
+  shop.innerHTML = '<div class="stan-shop-shell"><header class="stan-shop-heading">'
+    + '<div class="stan-shop-heading-copy"><h2 id="stan-shop-title" tabindex="-1">Shop the<br> drop<span>.</span></h2>'
+    + '<a class="stan-shop-featured" href="#shop" data-collection="october-23rd-drop">October 23rd Drop <span aria-hidden="true">↗</span></a>'
+    + '<p class="stan-preview-note">Store preview</p></div>'
+    + '<div class="stan-shop-art" aria-hidden="true"><div class="stan-shop-pattern"></div>'
+    + '<img class="stan-shop-model" src="/images/model-rebel-forest-green.webp" alt="" width="896" height="1120" loading="lazy" decoding="async">'
+    + '<figure class="stan-shop-swatch"><img src="/images/rebel-tee-black.webp" alt="" width="940" height="905" loading="lazy" decoding="async"></figure></div></header>'
+    + '<div class="stan-shop-tools" role="group" aria-label="Filter and sort clothing">'
+    + '<label class="stan-filter-field stan-search"><span>Search clothing</span><input type="search" placeholder="Search by name, colour or style"></label>'
+    + '<label class="stan-filter-field"><span id="stan-filter-collection">Collection</span><select class="stan-collection-filter" aria-labelledby="stan-filter-collection">'
     + collectionChoices.map(collection => '<option value="' + collection.slug + '">' + collection.name + '</option>').join('')
-    + '</select></label><label class="stan-filter-field"><span>Design type</span><select class="stan-type-filter">'
+    + '</select></label><label class="stan-filter-field"><span id="stan-filter-type">Design type</span><select class="stan-type-filter" aria-labelledby="stan-filter-type">'
     + '<option value="">All types</option>' + teeTypes.map(type => '<option value="' + type.slug + '">' + type.name + '</option>').join('')
-    + '</select></label><label class="stan-filter-field"><span>Colour</span><select class="stan-colour-filter">'
+    + '</select></label><label class="stan-filter-field"><span id="stan-filter-colour">Colour</span><select class="stan-colour-filter" aria-labelledby="stan-filter-colour">'
     + '<option value="">All colours</option>' + colours.map(colour => '<option>' + colour + '</option>').join('')
-    + '</select></label><label class="stan-filter-field"><span>Sort</span><select class="stan-sort">'
+    + '</select></label><label class="stan-filter-field"><span id="stan-filter-sort">Sort</span><select class="stan-sort" aria-labelledby="stan-filter-sort">'
     + '<option value="drop">Featured</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option>'
     + '</select></label></div>'
-    + '<p class="stan-result-count" role="status"></p><div class="stan-catalog"></div>'
+    + '<div class="stan-shop-results"><p class="stan-result-count" role="status"></p><button type="button" class="stan-filter-reset" data-shop-clear hidden>Reset filters <span aria-hidden="true">×</span></button></div><div class="stan-catalog"></div>'
     + '<p class="stan-no-matches" hidden>No items match these filters. <button type="button" data-shop-clear>Clear filters</button></p>'
     + '<button type="button" class="stan-show-all" hidden></button></div>';
   const grid = shop.querySelector('.stan-catalog');
@@ -117,6 +122,7 @@ export function mountShop({ shop, dialog }) {
   const colourFilter = shop.querySelector('.stan-colour-filter');
   const sort = shop.querySelector('.stan-sort');
   const status = shop.querySelector('[role="status"]');
+  const reset = shop.querySelector('.stan-filter-reset');
   const noMatches = shop.querySelector('.stan-no-matches');
   const showAll = shop.querySelector('.stan-show-all');
 
@@ -142,6 +148,7 @@ export function mountShop({ shop, dialog }) {
     status.textContent = displayed.length === visible.length
       ? visible.length + (visible.length === 1 ? ' item' : ' items')
       : 'Showing ' + displayed.length + ' of ' + visible.length + ' items';
+    reset.hidden = !search.value.trim() && collectionFilter.value === 'all' && !typeFilter.value && !colourFilter.value && sort.value === 'drop';
     noMatches.hidden = visible.length > 0;
     showAll.hidden = displayed.length === visible.length;
     showAll.textContent = 'Show all ' + visible.length + ' items';
@@ -162,14 +169,22 @@ export function mountShop({ shop, dialog }) {
 
   search.addEventListener('input', resetAndRender);
   [collectionFilter, typeFilter, colourFilter, sort].forEach(control => control.addEventListener('change', resetAndRender));
-  shop.querySelector('[data-shop-clear]').addEventListener('click', () => {
-    clearFilters();
-    search.focus();
-  });
+  for (const button of shop.querySelectorAll('[data-shop-clear]')) {
+    button.addEventListener('click', () => {
+      sort.value = 'drop';
+      clearFilters();
+      search.focus();
+    });
+  }
   showAll.addEventListener('click', () => {
     expanded = true;
     renderCatalog();
-    grid.children[initialLimit]?.querySelector('button')?.focus();
+    const firstAdded = grid.children[initialLimit];
+    if (firstAdded) {
+      const target = firstAdded.querySelector('button') ?? firstAdded;
+      if (target === firstAdded) target.tabIndex = -1;
+      target.focus();
+    }
   });
   renderCatalog();
 

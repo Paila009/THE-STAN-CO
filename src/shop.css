@@ -1,22 +1,94 @@
 #shop {
+  --shop-cream: #fff6e0;
   background: var(--paper, #fff8f1);
   color: var(--brand-ink, #102c4d);
-  scroll-margin-top: 5rem;
 }
 
 .stan-shop-shell {
   width: min(100%, 1560px);
   margin-inline: auto;
-  padding: clamp(3.5rem, 7vw, 7rem) clamp(1rem, 5vw, 6rem);
+  padding: clamp(1.25rem, 3vw, 3rem) var(--gutter) clamp(3rem, 6vw, 6rem);
 }
 
 .stan-shop-heading {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: end;
-  justify-content: space-between;
-  gap: 1.5rem 3rem;
-  margin-bottom: clamp(1.3rem, 3.5vw, 3.25rem);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+  align-items: center;
+  overflow: clip;
+  min-height: clamp(275px, 27vw, 446px);
+  border: 1px solid var(--brand-ink);
+  color: var(--shop-cream);
+  background: radial-gradient(ellipse at 81% 78%, #225a91 0%, transparent 52%), var(--brand-ink);
+  isolation: isolate;
+}
+.stan-shop-heading-copy {
+  position: relative;
+  z-index: 2;
+  padding: clamp(1.3rem, 3.75vw, 3.75rem);
+}
+.stan-shop-featured {
+  display: inline-flex;
+  align-items: center;
+  gap: .85rem;
+  min-height: 44px;
+  margin-top: clamp(.9rem, 1.7vw, 1.5rem);
+  padding: .48rem .68rem;
+  border: 1px solid var(--brand-orange);
+  background: var(--brand-orange);
+  color: var(--brand-ink);
+  font: 600 clamp(.65rem, .9vw, .82rem)/1.1 var(--mono);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.stan-shop-featured:hover { background: var(--shop-cream); border-color: var(--shop-cream); }
+.stan-shop-heading :focus-visible { outline-color: var(--brand-orange); }
+.stan-shop-art {
+  position: absolute;
+  inset: 0 0 0 44%;
+  overflow: clip;
+}
+.stan-shop-pattern {
+  position: absolute;
+  inset: 11% 6% 9% 5%;
+  border: 1px solid #abc5e044;
+  background-image:
+    linear-gradient(90deg, #abc5e029 1px, transparent 1px),
+    linear-gradient(#abc5e029 1px, transparent 1px);
+  background-size: clamp(18px, 2vw, 32px) clamp(18px, 2vw, 32px);
+  mask-image: linear-gradient(90deg, transparent, #000 24%);
+}
+.stan-shop-pattern::after {
+  content: '';
+  position: absolute;
+  inset: 9% 11% 10%;
+  border: 1px dashed #ffd3b18c;
+  border-radius: 50%;
+  transform: rotate(-16deg);
+}
+.stan-shop-model {
+  position: absolute;
+  inset: 8% 13% auto 0;
+  width: 87%;
+  height: 151%;
+  object-fit: contain;
+  object-position: center top;
+}
+.stan-shop-swatch {
+  position: absolute;
+  right: 11%;
+  bottom: 12%;
+  width: min(26%, 158px);
+  margin: 0;
+  padding: 5px;
+  border: 1px solid var(--brand-ink);
+  background: var(--shop-cream);
+  box-shadow: 5px 5px 0 var(--brand-orange);
+  transform: rotate(9deg);
+}
+.stan-shop-swatch img {
+  width: 100%;
+  height: auto;
 }
 
 .stan-mono {
@@ -25,21 +97,6 @@
   font-weight: 600;
   letter-spacing: 0.075em;
   text-transform: uppercase;
-}
-
-.stan-shop-kicker {
-  display: inline-flex;
-  gap: 0.65rem;
-  align-items: center;
-  margin: 0 0 0.6rem;
-}
-
-.stan-shop-kicker::before {
-  width: 0.55rem;
-  height: 0.55rem;
-  background: var(--brand-orange, #fe914c);
-  border: 1px solid var(--brand-ink, #102c4d);
-  content: "";
 }
 
 .stan-shop-heading h2,
@@ -52,32 +109,57 @@
   text-transform: uppercase;
 }
 
-.stan-shop-heading h2 { font-size: clamp(2.55rem, 6.5vw, 7rem); }
-.stan-shop-heading h2 > span { color: var(--brand-blue, #1163af); }
+.stan-shop-heading h2 {
+  font-family: var(--landing-display, var(--display));
+  font-size: clamp(3rem, 8vw, 8.5rem);
+  font-weight: 700;
+  line-height: .82;
+}
+.stan-shop-heading h2 > span { color: var(--brand-orange); }
 
 .stan-shop-tools {
   display: grid;
-  grid-template-columns: minmax(12rem, 1.6fr) repeat(4, minmax(7rem, 1fr));
-  gap: 0.75rem;
-  padding: 1rem 0;
-  border-top: 1px solid var(--line, #e7d6c6);
-  border-bottom: 1px solid var(--line, #e7d6c6);
+  grid-template-columns: minmax(12rem, 1.6fr) repeat(4, minmax(0, 1fr));
+  gap: clamp(.65rem, 1.5vw, 1.25rem);
+  padding: clamp(.85rem, 1.7vw, 1.45rem);
+  border: 1px solid var(--brand-ink);
+  border-top: 3px solid var(--brand-orange);
+  background: var(--shop-cream);
 }
 .stan-filter-field { min-width: 0; display: grid; gap: 0.35rem; align-self: start; }
-.stan-filter-field > span { font-size: 0.76rem; font-weight: 600; }
+.stan-filter-field > span { font: 600 .68rem/1.2 var(--mono); text-transform: uppercase; letter-spacing: .04em; }
 .stan-filter-field :is(input, select) {
   min-height: 2.75rem;
   min-width: 0;
   width: 100%;
-  border: 1px solid #728094;
+  border: 1px solid #102c4d8a;
   padding: 0.5rem 0.6rem;
-  background: #fff;
+  background: #fffaf2;
   color: inherit;
   font: inherit;
   font-size: 0.88rem;
 }
 .stan-filter-field select { cursor: pointer; }
-.stan-result-count { margin: 0.8rem 0; color: #495969; font-size: 0.82rem; }
+.stan-shop-results {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 54px;
+  margin-top: .6rem;
+}
+.stan-result-count { margin: 0; color: #43526a; font: 500 .74rem/1.25 var(--mono); }
+.stan-filter-reset {
+  min-height: 44px;
+  padding: .4rem .55rem;
+  border: 0;
+  color: var(--brand-ink);
+  background: transparent;
+  font-size: .78rem;
+  text-decoration: underline;
+  text-underline-offset: .16em;
+}
+.stan-filter-reset:hover { color: var(--brand-blue); }
 .stan-catalog { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(1.35rem, 2.4vw, 2.4rem) clamp(0.65rem, 1.5vw, 1.55rem); }
 .stan-no-matches { margin: 1.5rem 0 0; }
 .stan-no-matches button { border: 0; background: none; color: inherit; text-decoration: underline; }
@@ -87,13 +169,23 @@
   margin: clamp(1.65rem, 3.5vw, 2.75rem) auto 0;
   padding: 0.55rem 1.4rem;
   border: 1px solid var(--brand-ink, #102c4d);
-  background: #fff;
+  background: var(--brand-ink);
+  color: var(--shop-cream);
   font-weight: 600;
 }
-.stan-show-all:hover { background: var(--brand-orange, #fe914c); }
+.stan-show-all:hover { background: var(--brand-orange, #fe914c); color: var(--brand-ink); }
 .stan-show-all[hidden] { display: none; }
 
 .stan-card { min-width: 0; }
+.stan-catalog .stan-card {
+  padding: clamp(.42rem, 1.1vw, .85rem);
+  border: 1px solid #102c4d39;
+  background: var(--shop-cream);
+}
+.stan-catalog .stan-card:has(.stan-card-button:is(:hover, :focus-visible)) { border-color: var(--brand-ink); }
+.stan-catalog .stan-card--upcoming { background: #fbf4e6; }
+.stan-catalog .stan-card-art { border: 1px solid #102c4d22; grid-template-rows: minmax(0, 1fr); }
+.stan-catalog .stan-card-art img { min-height: 0; }
 
 .stan-card-button {
   display: block;
@@ -340,6 +432,11 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
 }
 
 @media (max-width: 540px) {
+  .stan-shop-heading { grid-template-columns: minmax(0, 1fr); min-height: 248px; }
+  .stan-shop-heading h2 { font-size: clamp(2.75rem, 11.2vw, 4.25rem); }
+  .stan-shop-art { inset-inline-start: 43%; }
+  .stan-shop-model { inset: 9% 0 auto 0; width: 100%; height: 151%; object-fit: cover; }
+  .stan-shop-swatch { right: 10%; bottom: 10%; width: 31%; padding: 3px; box-shadow: 3px 3px 0 var(--brand-orange); }
   .stan-filter-field :is(input, select) { font-size: 0.82rem; padding-inline: 0.35rem; }
   .stan-product { grid-template-columns: minmax(0, 1fr); }
   .stan-product-art { aspect-ratio: 1.22; }
@@ -364,7 +461,9 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
 }
 
 .stan-preview-note {
-  margin: .6rem 0 0;
-  color: #495969;
-  font-size: .81rem;
+  margin: .7rem 0 0;
+  color: #fff6e0cf;
+  font: 500 .66rem/1.25 var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .08em;
 }
