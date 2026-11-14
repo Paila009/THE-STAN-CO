@@ -1,5 +1,5 @@
 import './chapters.css';
-import { collections } from './collections.js';
+import { collectionPortrait, collections } from './collections.js';
 
 const artDirection = {
   prabhas: {
@@ -7,10 +7,10 @@ const artDirection = {
     accent: '#ffb47e',
     ink: '#210e0b',
     glow: '#823c21',
-    portrait: '/images/rebelwood-white-suit.webp',
-    alternate: '/images/rebelwood-prabhas-style.webp',
-    alt: 'Rebelwood portrait in a white suit',
-    alternateAlt: 'Rebelwood portrait in a dark pinstripe suit and sunglasses',
+    alternate: '/images/model-rebelwood-dark.webp',
+    alt: 'Fashion model in an off-white suit',
+    alternateAlt: 'Fashion model in a dark pinstripe suit',
+    portraitSize: [896, 1120],
   },
   'frame-shift-studio': {
     accent: '#ffd18d',
@@ -24,25 +24,22 @@ const artDirection = {
     accent: '#f4b69a',
     ink: '#200f19',
     glow: '#693742',
-    alt: 'Portrait in a checked shirt and dark cardigan carrying a shoulder bag',
+    alt: 'Fashion model in a cocoa-brown workwear jacket',
     portraitSize: [896, 1120],
-    suppliedPortrait: true,
   },
   'mahesh-babu': {
     accent: '#a3d8ff',
     ink: '#0b1628',
     glow: '#254c79',
-    alt: 'Portrait with arms spread in a dark jacket and white shirt',
-    portraitSize: [1120, 1041],
-    suppliedPortrait: true,
+    alt: 'Fashion model in a navy jacket and ivory tee',
+    portraitSize: [896, 1120],
   },
   'ram-charan': {
     accent: '#ffa97e',
     ink: '#201008',
     glow: '#893b23',
-    alt: 'Portrait in a pink shirt and gray track jacket',
+    alt: 'Fashion model in a coral tee and gray track jacket',
     portraitSize: [896, 1120],
-    suppliedPortrait: true,
   },
   'after-hours': {
     legacyId: 'jr-ntr',
@@ -56,9 +53,8 @@ const artDirection = {
     accent: '#fcc0d6',
     ink: '#23121c',
     glow: '#723449',
-    alt: 'Black-and-white portrait in a hoodie with torn white paper across the eyes',
-    portraitSize: [1120, 1120],
-    suppliedPortrait: true,
+    alt: 'Fashion model in a charcoal hoodie',
+    portraitSize: [896, 1120],
   },
   'off-grid': {
     legacyId: 'nani',
@@ -100,7 +96,7 @@ function chapterMarkup(collection, index) {
   const direction = artDirection[collection.slug];
   const name = collection.name;
   const id = direction.id ?? collection.slug;
-  const portrait = direction.portrait ?? '/images/cast-' + collection.slug + '.webp';
+  const portrait = collectionPortrait(collection.slug);
   const alt = direction.alt ?? name + ' collection portrait';
   const [portraitWidth, portraitHeight] = direction.portraitSize ?? [1142, 1402];
   const nextCollection = collections[index + 1];
@@ -119,7 +115,7 @@ function chapterMarkup(collection, index) {
         <div class="actor-chapter__watermark" aria-hidden="true">${name}</div>
         <div class="actor-chapter__media">
           <img class="actor-chapter__portrait is-active${direction.alternate ? ' actor-chapter__portrait--white-suit' : ''}" src="${portrait}" alt="${alt}" width="${portraitWidth}" height="${portraitHeight}" loading="lazy" decoding="async">
-          ${direction.alternate ? `<img class="actor-chapter__portrait actor-chapter__portrait--alternate" src="${direction.alternate}" alt="${direction.alternateAlt}" width="1142" height="1402" loading="lazy" decoding="async" aria-hidden="true">` : ''}
+          ${direction.alternate ? `<img class="actor-chapter__portrait actor-chapter__portrait--alternate" src="${direction.alternate}" alt="${direction.alternateAlt}" width="${portraitWidth}" height="${portraitHeight}" loading="lazy" decoding="async" aria-hidden="true">` : ''}
         </div>
         <header class="actor-chapter__heading" data-chapter-heading>
           <p>The Stan Co.</p>
@@ -135,7 +131,7 @@ function chapterMarkup(collection, index) {
               <button type="button" data-chapter-look="0" aria-pressed="true">White suit</button>
               <button type="button" data-chapter-look="1" aria-pressed="false">Dark suit</button>
             </div>
-          ` : direction.suppliedPortrait ? '' : '<span class="actor-chapter__image-note">AI-generated model artwork</span>'}
+          ` : '<span class="actor-chapter__image-note">AI-generated model artwork</span>'}
           <a class="actor-chapter__next" href="#${nextId}">${nextLabel}<span aria-hidden="true">↓</span></a>
         </footer>
       </div>

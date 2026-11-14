@@ -1,8 +1,7 @@
-import { collections, teeTypes } from './collections.js';
+import { collectionPortrait, collections, teeTypes } from './collections.js';
 import './hero-strip.css';
 
 const chapterId = (slug) => ({ prabhas: 'rebelwood', 'allu-arjun': 'bhaai' })[slug] ?? slug;
-const portraitFor = (slug) => slug === 'prabhas' ? '/images/rebelwood-white-suit.webp' : `/images/cast-${slug}.webp`;
 
 export function mountBrowse(section) {
   const modes = section.querySelectorAll('[data-browse-mode]');
@@ -28,7 +27,7 @@ export function mountBrowse(section) {
     const closer = duplicate ? '</span>' : '</a>';
     return `<div class="hero-strip__item">
       ${opener} class="hero-strip__link">
-        <img class="hero-strip__portrait" src="${portraitFor(slug)}" alt="" loading="lazy" decoding="async">
+        <img class="hero-strip__portrait" src="${collectionPortrait(slug)}" alt="" loading="lazy" decoding="async">
         <span class="hero-strip__name" data-text="${name}">${name}</span>
       ${closer}
       <span class="hero-strip__separator" aria-hidden="true">✦</span>

@@ -162,3 +162,15 @@ export const collections = collectionDetails.map(({ items, ...collection }) => (
 }));
 
 export const actorProducts = collections.flatMap(collection => collection.products);
+
+const collectionPortraits = {
+  prabhas: 'model-rebelwood-white',
+  'allu-arjun': 'model-grain-grit',
+  'mahesh-babu': 'model-motion-archive',
+  'ram-charan': 'model-heatwave-press',
+  'pawan-kalyan': 'model-signal-works',
+};
+
+export function collectionPortrait(slug) {
+  return `/images/${collectionPortraits[slug] ?? 'cast-' + slug}.webp`;
+}
