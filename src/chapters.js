@@ -1,5 +1,5 @@
 import './chapters.css';
-import { collectionPortrait, collections, upcomingGarment } from './collections.js';
+import { chapterCollections, collectionPortrait, upcomingGarment } from './collections.js';
 
 const artDirection = {
   'october-23rd-drop': {
@@ -111,16 +111,16 @@ function productCard(product, index, products) {
     </li>`;
 }
 
-function chapterMarkup(collection, index) {
+function chapterMarkup(collection, index, chapters) {
   const direction = artDirection[collection.slug];
   const name = collection.name;
   const id = direction.id ?? collection.slug;
   const portrait = collectionPortrait(collection.slug);
   const alt = direction.alt ?? name + ' collection portrait';
   const [portraitWidth, portraitHeight] = direction.portraitSize ?? [1142, 1402];
-  const nextCollection = collections[index + 1];
+  const nextCollection = chapters[index + 1];
   const next = nextCollection && artDirection[nextCollection.slug];
-  const nextId = next?.id ?? nextCollection?.slug ?? 'shop';
+  const nextId = next?.id ?? nextCollection?.slug ?? 'shop-filters';
   const nextLabel = nextCollection?.name ?? 'All clothing';
   const isOctoberDrop = collection.slug === 'october-23rd-drop';
   const featured = isOctoberDrop || collection.slug === 'allu-arjun' ? ' actor-chapter--featured' : '';
@@ -206,7 +206,7 @@ function setupCardTilt(container, motion) {
 
 export function mountChapters(container) {
   if (!container) return;
-  container.innerHTML = collections.map(chapterMarkup).join('');
+  container.innerHTML = chapterCollections.map(chapterMarkup).join('');
   const chapters = [...container.querySelectorAll('[data-actor-chapter]')];
   for (const chapter of chapters) setupLookSwitch(chapter);
 

@@ -34,6 +34,7 @@ const collectionDetails = [
   {
     slug: 'october-23rd-drop',
     name: 'October 23rd Drop',
+    showChapter: true,
     comingSoon: false,
     description: 'The Original Rebel Classic T-shirt and the King of the Sea pendant.',
     items: [
@@ -57,6 +58,7 @@ const collectionDetails = [
   {
     slug: 'new-drop-incoming',
     name: 'New Drop Incoming',
+    showChapter: true,
     description: 'Coming soon',
     items: [
       {
@@ -175,6 +177,7 @@ export const collections = collectionDetails.map(({ items, comingSoon = true, ..
   })),
 }));
 
+export const chapterCollections = collections.filter(collection => collection.showChapter);
 export const actorProducts = collections.flatMap(collection => collection.products);
 
 const collectionPortraits = {

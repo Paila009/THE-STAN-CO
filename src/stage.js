@@ -1,4 +1,4 @@
-import { collectionPortrait, collections, teeTypes } from './collections.js';
+import { chapterCollections, collectionPortrait, teeTypes } from './collections.js';
 import './hero-strip.css';
 import { mountBrandIntro } from './brand-intro.js';
 
@@ -35,8 +35,8 @@ export function mountBrowse(section) {
     </div>`;
   }
 
-  track.innerHTML = `<div class="hero-strip__group">${collections.map((item) => collectionItem(item)).join('')}</div>
-    <div class="hero-strip__group" aria-hidden="true">${collections.map((item) => collectionItem(item, true)).join('')}</div>`;
+  track.innerHTML = `<div class="hero-strip__group">${chapterCollections.map((item) => collectionItem(item)).join('')}</div>
+    <div class="hero-strip__group" aria-hidden="true">${chapterCollections.map((item) => collectionItem(item, true)).join('')}</div>`;
   const firstGroup = track.firstElementChild;
   types.querySelector('[data-browse-track]').innerHTML = teeTypes.map((type) => `
     <a class="browse-card" href="#shop" data-tee-type="${type.slug}">

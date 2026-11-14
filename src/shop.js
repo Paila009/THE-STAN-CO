@@ -64,7 +64,7 @@ function shopOpening() {
       + '</li>';
   }).join('');
 
-  return '<div class="stan-shop-opening"><header class="stan-shop-heading">'
+  return '<div class="stan-shop-opening"><span class="stan-fan-anchor" id="shop-the-drop" aria-hidden="true"></span><header class="stan-shop-heading">'
     + '<div class="stan-shop-heading-copy"><h2 id="stan-shop-title" tabindex="-1">Shop the drop<span>.</span></h2>'
     + '<div class="stan-shop-opening-actions"><a class="stan-shop-featured" href="#shop-filters" data-collection="october-23rd-drop">October 23rd Drop <span aria-hidden="true">↗</span></a>'
     + '<a class="stan-fan-skip" href="#shop-filters" data-collection="all">Browse all products <span aria-hidden="true">↓</span></a></div></div>'

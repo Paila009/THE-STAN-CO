@@ -6,6 +6,12 @@
   --fan-travel: min(62svh, 485px);
   --fan-lead: 1;
   --fan-spread: 1;
+  position: relative;
+}
+/* The hero link lands at the end of the fan's sticky scroll distance. */
+.stan-fan-anchor {
+  position: absolute;
+  top: var(--fan-travel);
 }
 .stan-shop-opening::after {
   content: '';
@@ -57,7 +63,7 @@
 .stan-shop-featured:hover { background: var(--brand-ink); border-color: var(--brand-ink); color: var(--shop-cream); }
 .stan-fan-skip:hover { color: var(--brand-blue); }
 .stan-shop-fan {
-  --fan-card-width: min(25.2%, 249px);
+  --fan-card-width: min(23%, 249px);
   --fan-card-height: clamp(210px, min(32vw, 43svh), 380px);
   position: relative;
   isolation: isolate;
@@ -166,7 +172,7 @@
 @media (max-width: 740px) {
   .stan-shop-opening { --fan-travel: min(50svh, 330px); }
   .stan-shop-fan {
-    --fan-card-width: min(31%, 164px);
+    --fan-card-width: min(28.5%, 164px);
     --fan-card-height: clamp(163px, 57vw, 249px);
   }
   .stan-fan-card {
@@ -177,9 +183,14 @@
   .stan-fan-status { display: none; }
   .stan-fan-label { padding: .45rem .44rem; }
 }
-@media (max-height: 580px) and (min-width: 741px) {
-  .stan-shop-fan { --fan-card-height: clamp(142px, 41svh, 238px); }
+@media (max-height: 620px) {
+  .stan-shop-heading { padding-block: 12px; }
   .stan-shop-heading h2 { font-size: clamp(1.75rem, 9.5svh, 4.8rem); }
+  .stan-shop-fan {
+    --fan-card-height: clamp(115px, 36svh, 210px);
+    --fan-card-width: min(23%, calc(var(--fan-card-height) * .74));
+    min-height: calc(var(--fan-card-height) + 40px);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .stan-shop-opening { --fan-travel: 0px; }
