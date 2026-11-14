@@ -3,9 +3,6 @@
   --ink: #111111;
   --paper: #fbfbfa;
   --accent: #9fbaff;
-  --cobalt: #2445bf;
-  --orange: #ce642d;
-  --muted: #555862;
   --line: #e4e4e0;
   --display: 'Barlow Condensed', 'Archivo Black', Impact, sans-serif;
   --body: 'DM Sans', Arial, sans-serif;
@@ -19,7 +16,6 @@
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0; }
 img { max-width: 100%; display: block; }
-[hidden] { display: none !important; }
 button, input, select { font: inherit; }
 button { cursor: pointer; }
 a { color: inherit; }
