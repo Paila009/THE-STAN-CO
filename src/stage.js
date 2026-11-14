@@ -129,13 +129,10 @@ export function mountBrowse(section) {
 export function mountOpening(hero) {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const progress = document.querySelector('.page-progress');
-  const shutter = hero.querySelector('.premiere-shutter');
+  const title = hero.querySelector('#opening-title');
   const startsAtOpening = !location.hash || location.hash === '#top';
   let visible = true;
   let scrollFrame = 0;
-  let loading = false;
-  let scene;
-  let openingStarted = -Infinity;
   let openingTimeout;
 
   function finishOpening() {
@@ -144,13 +141,12 @@ export function mountOpening(hero) {
   }
 
   if (startsAtOpening && !reduced.matches && window.scrollY < 80) {
-    openingStarted = performance.now();
     hero.classList.add('is-opening');
-    openingTimeout = window.setTimeout(finishOpening, 2100);
+    openingTimeout = window.setTimeout(finishOpening, 1550);
   }
 
-  shutter.addEventListener('animationend', (event) => {
-    if (event.target === shutter && event.animationName === 'premiere-opening') finishOpening();
+  title.addEventListener('animationend', (event) => {
+    if (event.animationName === 'signature-arrival') finishOpening();
   });
   function updateScroll() {
     scrollFrame = 0;
@@ -161,9 +157,7 @@ export function mountOpening(hero) {
     const movement = Math.max(0, Math.min(1, -hero.getBoundingClientRect().top / hero.offsetHeight));
     const amplitude = innerWidth < 681 ? .46 : 1;
     hero.style.setProperty('--title-slide', `${movement * -58 * amplitude}px`);
-    hero.style.setProperty('--reel-slide', `${movement * 102 * amplitude}px`);
-    hero.style.setProperty('--floor-slide', `${movement * -80 * amplitude}px`);
-    hero.style.setProperty('--fashion-slide', `${movement * 48 * amplitude}px`);
+    hero.style.setProperty('--fashion-slide', `${movement * 34 * amplitude}px`);
   }
 
   function scheduleScroll() {
@@ -178,27 +172,9 @@ export function mountOpening(hero) {
   window.addEventListener('scroll', scheduleScroll, { passive: true });
   window.addEventListener('resize', scheduleScroll, { passive: true });
 
-  function ensureScene() {
-    if (scene || loading || reduced.matches) return;
-    loading = true;
-    import('./projector.js')
-      .then(({ mountProjector, PROJECTOR_ENTRY_MS }) => {
-        if (reduced.matches) return;
-        scene = mountProjector(hero, { entryElapsed: Math.min(performance.now() - openingStarted, PROJECTOR_ENTRY_MS) });
-        hero.classList.add('has-projector');
-      })
-      .catch(() => { hero.classList.remove('has-projector'); })
-      .finally(() => { loading = false; });
-  }
-
   reduced.addEventListener('change', (event) => {
     if (event.matches) finishOpening();
-    scene?.setPaused(event.matches);
-    ensureScene();
     scheduleScroll();
   });
   scheduleScroll();
-  if (startsAtOpening) ensureScene();
-  else if ('requestIdleCallback' in window) requestIdleCallback(ensureScene, { timeout: 750 });
-  else ensureScene();
 }

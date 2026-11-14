@@ -1,7 +1,6 @@
 import './styles.css';
 import './header.css';
 import './stage.css';
-import './premiere-fashion.css';
 import './cinema.css';
 import { mountCinema } from './cinema.js';
 import { mountShop } from './shop.js';
