@@ -350,7 +350,8 @@ a.actor-chapter__product:focus-visible {
 }
 
 .actor-chapter__product--coming-soon img {
-  opacity: .63;
+  opacity: .58;
+  filter: blur(2.5px);
 }
 
 .actor-chapter__availability {
@@ -510,24 +511,23 @@ a.actor-chapter__product:focus-visible {
   #off-grid .actor-chapter__media { inset-inline: -16% 8%; }
 }
 
-/* Give the Frame District portrait its own space beside or below the title. */
-#frame-shift-studio .actor-chapter__heading h2 {
+#new-drop-incoming .actor-chapter__heading h2 {
   max-inline-size: 5.8em;
   font-size: clamp(53px, 7.8vw, 133px);
   line-height: .84;
 }
 
 @media (min-width: 761px) {
-  #frame-shift-studio .actor-chapter__media { inset-inline: 43% 3%; }
+  #new-drop-incoming .actor-chapter__media { inset-inline: 43% 3%; }
 }
 
 @media (max-width: 760px) {
-  #frame-shift-studio .actor-chapter__heading h2 {
+  #new-drop-incoming .actor-chapter__heading h2 {
     max-inline-size: none;
     font-size: clamp(37px, 9.6vw, 72px);
   }
-  #frame-shift-studio .actor-chapter__media { inset: clamp(154px, 25vw, 205px) 0 10%; }
-  #frame-shift-studio .actor-chapter__portrait { height: 100%; }
+  #new-drop-incoming .actor-chapter__media { inset: clamp(154px, 25vw, 205px) 0 10%; }
+  #new-drop-incoming .actor-chapter__portrait { height: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,5 +1,5 @@
 import './chapters.css';
-import { collectionPortrait, collections } from './collections.js';
+import { collectionPortrait, collections, upcomingGarment } from './collections.js';
 
 const artDirection = {
   'october-23rd-drop': {
@@ -12,11 +12,12 @@ const artDirection = {
     alternateAlt: 'Fashion model wearing the black Rebel T-shirt',
     portraitSize: [896, 1120],
   },
-  'frame-shift-studio': {
+  'new-drop-incoming': {
+    legacyId: 'frame-shift-studio',
     accent: '#ffd18d',
     ink: '#14151e',
     glow: '#57402e',
-    alt: 'Model in a washed black short-sleeve tee with an amber print',
+    alt: 'Model in a plain washed charcoal T-shirt',
     portraitSize: [747, 1120],
   },
   'allu-arjun': {
@@ -73,6 +74,18 @@ const money = new Intl.NumberFormat('en-IN', {
 });
 
 function productCard(product, index, products) {
+  const side = products.length === 1 || index > 0 ? 1 : -1;
+  if (product.comingSoon) {
+    return `
+      <li class="actor-chapter__card" style="--card-side:${side}">
+        <div class="actor-chapter__product actor-chapter__product--coming-soon">
+          <span class="actor-chapter__garment"><img src="${upcomingGarment(product)}" alt="" width="640" height="760" loading="lazy" decoding="async"></span>
+          <span class="actor-chapter__card-name">${product.name}</span>
+          <span class="actor-chapter__availability">Coming soon</span>
+        </div>
+      </li>`;
+  }
+
   const hoodie = product.garment === 'hoodie';
   const garmentName = hoodie ? 'hoodie' : 'tee';
   const nameHasGarment = product.name.toLowerCase().endsWith(' ' + garmentName);
@@ -80,20 +93,9 @@ function productCard(product, index, products) {
   const photos = product.image
     ? `<img src="${product.image}" alt="" loading="lazy" decoding="async">`
     : `<img src="/images/${product.slug}-back.webp" alt="" width="780" height="900" loading="lazy" decoding="async">
-       ${product.comingSoon ? '' : `<img class="actor-chapter__garment-front" src="/images/${product.slug}-front.webp" alt="" width="780" height="900" loading="lazy" decoding="async">`}`;
-  const side = products.length === 1 || index > 0 ? 1 : -1;
+       <img class="actor-chapter__garment-front" src="/images/${product.slug}-front.webp" alt="" width="780" height="900" loading="lazy" decoding="async">`;
   const productArt = `<span class="actor-chapter__garment${product.image ? ' actor-chapter__garment--photo' : ''}">${photos}</span>
     <span class="actor-chapter__card-name">${product.name}</span>`;
-
-  if (product.comingSoon) {
-    return `
-      <li class="actor-chapter__card" style="--card-side:${side}">
-        <div class="actor-chapter__product actor-chapter__product--coming-soon">
-          ${productArt}
-          <span class="actor-chapter__availability">Coming soon</span>
-        </div>
-      </li>`;
-  }
 
   const price = money.format(product.price / 100);
   const label = product.image

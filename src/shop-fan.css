@@ -98,7 +98,7 @@
   width: 100%;
   object-fit: contain;
 }
-.stan-fan-card:has(.stan-fan-status) img { opacity: .6; }
+.stan-fan-card:has(.stan-fan-status) img { opacity: .58; filter: blur(2px); }
 .stan-fan-status {
   position: absolute;
   inset: auto 6px 8px;

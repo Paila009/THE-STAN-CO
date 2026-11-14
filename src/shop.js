@@ -1,5 +1,5 @@
 import QRCode from 'qrcode';
-import { actorProducts, collections, teeTypes } from './collections.js';
+import { actorProducts, collections, teeTypes, upcomingGarment } from './collections.js';
 import { mountShopFan } from './shop-fan.js';
 import './shop.css';
 import './shop-fan.css';
@@ -9,7 +9,7 @@ const firstShowProducts = [
   { slug: 'fire-flood', teeType: 'graphic', name: 'Fire & Flood', color: 'Bone', hex: '#e4ddcb', price: 119900, stock: [2, 6, 7, 4, 1], description: 'A small elemental crest up front. Cobalt waves meet flame-orange contours on the back.' },
   { slug: 'small-fury', teeType: 'graphic', name: 'Small Fury', color: 'Deep olive', hex: '#40483b', price: 109900, stock: [0, 3, 6, 4, 2], description: 'A tiny citrus fly on the chest. A close-up of its wings and a ringed lens on the back.' },
   { slug: 'home-turf', teeType: 'geometric', name: 'Home Turf', color: 'Cobalt', hex: '#2547af', price: 119900, stock: [2, 4, 6, 2, 0], description: 'A cream court mark on the chest. Kabaddi court lines and orange boundary marks on the back.' },
-].map(product => ({ ...product, collection: 'first-show', collectionName: 'First Show' }));
+].map(product => ({ ...product, comingSoon: true, collection: 'first-show', collectionName: 'First Show' }));
 
 export const products = [...actorProducts, ...firstShowProducts];
 const optionsFor = product => product.variants?.map(variant => ({ ...product, ...variant })) ?? [product];
@@ -25,7 +25,9 @@ const price = amount => rupees.format(amount / 100);
 const productFor = slug => productOptions.find(product => product.slug === slug);
 const garmentName = product => product.image || product.garment === 'hoodie' || /\btee$/i.test(product.name) ? product.name : product.name + ' tee';
 const photoDescription = (product, side) => `${product.color} ${garmentName(product)}, ${side} view`;
-const art = (product, side = 'front') => product.image ?? '/images/' + product.slug + '-' + side + '.webp';
+const art = (product, side = 'front') => product.comingSoon
+  ? upcomingGarment(product)
+  : product.image ?? '/images/' + product.slug + '-' + side + '.webp';
 const isAccessory = product => product.garment === 'accessory';
 const quantityLimit = (product, size) => {
   if (product.comingSoon) return 0;
@@ -94,7 +96,7 @@ function catalogCard(product) {
   if (product.comingSoon) {
     return '<article class="stan-card stan-card--upcoming"><div class="stan-card-art">' + photo + '</div>'
       + '<div class="stan-card-meta"><span class="stan-card-name">' + product.name + '</span>'
-      + '<span class="stan-coming-soon">Coming soon</span></div><p class="stan-card-color">' + product.color + ' · ' + product.collectionName + '</p></article>';
+      + '<span class="stan-coming-soon">Coming soon</span></div><p class="stan-card-color">' + product.collectionName + '</p></article>';
   }
   const back = product.image ? '' : '<img class="stan-card-back" src="' + art(product, 'back') + '" width="780" height="900" alt="" loading="lazy" decoding="async">';
   const colourLabel = product.variants ? product.variants.length + ' colours' : product.color;
@@ -255,9 +257,8 @@ export function mountShop({ shop, dialog }) {
     const product = activeProduct;
     if (product.comingSoon) {
       show('product', product.name, '<div class="stan-product stan-card--upcoming"><div class="stan-product-photo">'
-        + '<img src="' + art(product) + '" alt="' + photoDescription(product, 'front') + '"></div>'
-        + '<div class="stan-product-details"><span class="stan-coming-soon">Coming soon</span><p>' + product.description
-        + '</p></div></div>', { wide: true });
+        + '<img src="' + art(product) + '" alt=""></div>'
+        + '<div class="stan-product-details"><span class="stan-coming-soon">Coming soon</span></div></div>', { wide: true });
       return;
     }
     if (product.image) {

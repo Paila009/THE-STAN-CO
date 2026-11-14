@@ -60,7 +60,7 @@ function sceneMarkup(scene, index) {
         <p class="cinema__song">${scene.song}</p>
         <p class="cinema__description">${scene.description}</p>
         <div class="cinema__actions">
-          <a class="cinema__product" href="#product/${scene.slug}" data-product="${scene.slug}">${scene.product}${arrow}</a>
+          <a class="cinema__product" href="#product/${scene.slug}" data-product="${scene.slug}">${scene.product} · Coming soon${arrow}</a>
           <a class="cinema__track" href="${scene.track}" target="_blank" rel="noopener noreferrer" aria-label="Watch ${scene.song} on YouTube (opens in a new tab)">Watch the song${arrow}</a>
         </div>
       </div>

@@ -175,7 +175,7 @@
 .stan-card-name { margin: 0; font-size: clamp(1rem, 1.4vw, 1.25rem); letter-spacing: -0.03em; font-weight: 600; }
 .stan-card-price { font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
 .stan-card-color { display: block; margin: 0.25rem 0 0; color: #495969; font-size: 0.82rem; }
-.stan-card--upcoming :is(.stan-card-art, .stan-product-photo) img { opacity: .56; }
+.stan-card--upcoming :is(.stan-card-art, .stan-product-photo) img { opacity: .58; filter: blur(2.5px); }
 .stan-coming-soon {
   display: inline-block;
   padding: .3rem .48rem;

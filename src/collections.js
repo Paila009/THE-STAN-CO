@@ -1,26 +1,31 @@
+export function upcomingGarment({ garment, slug }) {
+  if (garment !== 'hoodie') return '/images/upcoming-tee.webp';
+  return slug === 'static-zip-hoodie' ? '/images/upcoming-zip-hoodie.webp' : '/images/upcoming-pullover.webp';
+}
+
 export const teeTypes = [
   {
     slug: 'graphic',
     name: 'Graphic tees',
-    image: '/images/fireline-back.webp',
+    image: upcomingGarment({}),
     description: 'Illustrated motifs and large back prints.',
   },
   {
     slug: 'typography',
     name: 'Typography tees',
-    image: '/images/style-code-back.webp',
+    image: '/images/rebel-tee-green.webp',
     description: 'Oversized lettering and bold titles.',
   },
   {
     slug: 'geometric',
     name: 'Geometric tees',
-    image: '/images/silver-screen-back.webp',
+    image: upcomingGarment({}),
     description: 'Grids, rings and repeating forms.',
   },
   {
     slug: 'hoodie',
     name: 'Hoodies',
-    image: '/images/night-shift-hoodie-back.webp',
+    image: upcomingGarment({ garment: 'hoodie' }),
     description: 'Oversized pullovers and full-zip hoodies.',
   },
 ].map(type => ({ ...type, id: type.slug }));
@@ -50,12 +55,12 @@ const collectionDetails = [
     ],
   },
   {
-    slug: 'frame-shift-studio',
-    name: 'Frame District',
-    description: 'Amber and cobalt exposure studies.',
+    slug: 'new-drop-incoming',
+    name: 'New Drop Incoming',
+    description: 'Coming soon',
     items: [
       {
-        slug: 'frame-district-tee', garment: 'tee', teeType: 'geometric', name: 'Frame District Tee', color: 'Charcoal', hex: '#323334',
+        slug: 'frame-district-tee', garment: 'tee', teeType: 'geometric', name: 'Unreleased Tee', color: 'Charcoal', hex: '#323334',
         price: 129900, stock: [2, 6, 8, 4, 2],
         description: 'Amber and cobalt crosshairs frame an exposure grid on the back, with a small amber viewfinder on the chest.',
       },
@@ -174,6 +179,7 @@ export const actorProducts = collections.flatMap(collection => collection.produc
 
 const collectionPortraits = {
   'october-23rd-drop': 'model-rebel-forest-green',
+  'new-drop-incoming': 'model-new-drop-incoming',
   'allu-arjun': 'model-grain-grit',
   'mahesh-babu': 'model-motion-archive',
   'ram-charan': 'model-heatwave-press',

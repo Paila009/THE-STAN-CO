@@ -145,7 +145,7 @@
   transition: transform .25s var(--hero-ease);
 }
 .premiere-garment__image { overflow: hidden; aspect-ratio: 1.21; background: #d8cec1; }
-.premiere-garment__image img { width: 100%; height: 100%; object-fit: cover; object-position: center 44%; transform: scale(2.35); transform-origin: 50% 22%; transition: transform .3s var(--hero-ease); }
+.premiere-garment__image img { width: 100%; height: 100%; object-fit: contain; opacity: .66; filter: blur(1.8px); transition: transform .3s var(--hero-ease); }
 .premiere-garment__name {
   display: flex;
   flex-wrap: wrap;
@@ -158,7 +158,7 @@
 }
 .premiere-garment__status { color: #43526a; font-size: .84em; white-space: nowrap; }
 .premiere-garment:is(:hover, :focus-visible) { transform: translateY(-4px); }
-.premiere-garment:is(:hover, :focus-visible) img { transform: scale(2.55); }
+.premiere-garment:is(:hover, :focus-visible) img { transform: scale(1.06); }
 
 .premiere-foot {
   display: grid;
