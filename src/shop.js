@@ -18,9 +18,13 @@ const products = [
     name: 'King of the Sea Pendant',
     category: 'Jewellery',
     colours: [],
+    cover: {
+      photo: '/images/sea-pendant.webp',
+      alt: 'Shell-shaped pendant on a black-and-rust twisted cord',
+    },
     price: null,
-    sizes: ['One size'],
-    description: 'Photography, price and availability are coming soon.',
+    sizes: [],
+    description: 'A shell-shaped pendant on a black-and-rust twisted cord.',
   },
 ];
 
@@ -32,6 +36,13 @@ const maxQuantity = 9;
 const lineKey = line => [line.id, line.colourId, line.size].join(':');
 const findColour = (product, id) => product.colours.find(colour => colour.id === id);
 const photoAlt = (product, colour) => product.name + ' in ' + colour.name.toLowerCase();
+
+function photoMarkup(product, colour, attributes = '') {
+  const media = colour || product.cover;
+  const alt = colour ? photoAlt(product, colour) : media.alt;
+  const dimensions = colour ? ' width="1200" height="1500"' : '';
+  return '<img src="' + media.photo + '" alt="' + alt + '"' + dimensions + attributes + '>';
+}
 
 function readBag() {
   try {
@@ -57,15 +68,13 @@ function readBag() {
 
 function productCard(product) {
   const colour = product.colours[0];
-  const photo = colour
-    ? '<img src="' + colour.photo + '" alt="' + photoAlt(product, colour) + '" width="800" height="1000" loading="lazy" decoding="async">'
-    : '<span class="rebel-photo-empty">Photography coming soon</span>';
+  const frame = colour ? '' : ' rebel-photo-full';
   return [
     '<article class="rebel-product-card">',
-    '<a class="rebel-product-photo' + (colour ? '' : ' rebel-product-photo--empty') + '" href="#product/' + product.id + '" data-product="' + product.id + '" aria-label="View ' + product.name + '">',
-    photo,
+    '<a class="rebel-product-photo' + frame + '" href="#product/' + product.id + '" data-product="' + product.id + '" aria-label="View ' + product.name + '">',
+    photoMarkup(product, colour, ' loading="lazy" decoding="async"'),
     '<span aria-hidden="true">↗</span></a>',
-    '<div class="rebel-product-caption"><div><p class="rebel-kicker">' + product.category + (colour ? ' / ' + product.colours.map(option => option.name).join(' · ') : ' / Coming soon') + '</p>',
+    '<div class="rebel-product-caption"><div><p class="rebel-kicker">' + product.category + (colour ? ' / ' + product.colours.map(option => option.name).join(' · ') : '') + '</p>',
     '<h3><a href="#product/' + product.id + '" data-product="' + product.id + '">' + product.name + '</a></h3></div>',
     '<span class="rebel-card-price">' + (product.price == null ? 'Price TBC' : inr(product.price) + ' sample') + '</span></div>',
     '</article>',
@@ -137,10 +146,14 @@ export function mountShop() {
   function showProduct(options) {
     const product = activeProduct;
     const apparel = product.category === 'Apparel';
+    const frame = selectedColour ? '' : ' rebel-photo-full';
+    const media = '<div><button type="button" class="rebel-detail-photo' + frame + '" data-shop-action="zoom" aria-label="Enlarge product photo">'
+      + photoMarkup(product, selectedColour) + '<span aria-hidden="true">↗</span></button></div>';
     if (product.price == null) {
-      show('product', product.name, '<div class="rebel-product-detail"><div class="rebel-detail-photo rebel-product-photo--empty"><span class="rebel-photo-empty">Photography coming soon</span></div>'
-        + '<div class="rebel-detail-info"><p class="rebel-kicker">Jewellery / Coming soon</p>'
-        + '<p>' + product.description + '</p><p class="rebel-option-note">One size. Details pending.</p>' + shareLinks(product) + '</div></div>', { wide: true });
+      show('product', product.name, '<div class="rebel-product-detail">' + media
+        + '<div class="rebel-detail-info"><p class="rebel-kicker">' + product.category + '</p>'
+        + '<p>' + product.description + '</p><p class="rebel-option-note">Price, sizing and availability to be confirmed.</p>'
+        + shareLinks(product) + '</div></div>', { wide: true, ...options });
       return;
     }
     const sizing = apparel
@@ -155,10 +168,7 @@ export function mountShop() {
           + colour.name + '</button>').join('')
         + '</div></fieldset>'
       : '';
-    show('product', product.name, '<div class="rebel-product-detail">'
-      + '<div><button type="button" class="rebel-detail-photo" data-shop-action="zoom" aria-label="Enlarge product photo">'
-      + '<img src="' + selectedColour.photo + '" alt="' + photoAlt(product, selectedColour) + '" width="800" height="1000">'
-      + '<span aria-hidden="true">↗</span></button></div>'
+    show('product', product.name, '<div class="rebel-product-detail">' + media
       + '<div class="rebel-detail-info"><p class="rebel-kicker">' + product.category + ' / ' + (apparel ? 'Drop 01' : 'Concept') + '</p>'
       + '<p class="rebel-detail-price">' + inr(product.price) + ' <span>Sample price</span></p><p>' + product.description + '</p>'
       + colours + sizing + '<p class="rebel-action-feedback" role="status"></p>'
@@ -193,7 +203,7 @@ export function mountShop() {
   function showZoom() {
     const product = activeProduct;
     show('zoom', 'Product photo', '<button type="button" class="rebel-inline" data-shop-action="zoom-back">← Back to item</button>'
-      + '<img class="rebel-photo-large" src="' + selectedColour.photo + '" alt="' + photoAlt(product, selectedColour) + '" width="800" height="1000">', { wide: true });
+      + photoMarkup(product, selectedColour, ' class="rebel-photo-large"'), { wide: true });
   }
 
   function pinForm(id) {

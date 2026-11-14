@@ -4,7 +4,7 @@ Vite storefront for The Stan Co. Run `pnpm install` and `pnpm dev` locally. Run 
 
 ## Maintaining this preview
 
-- The product list is in `src/shop.js`. Each tee colour has an identifier, label and image in `public/images/`. The supplied Forest green and Black photos are used there. The pendant's empty image area is intentional.
+- The product list is in `src/shop.js`. The Forest green and Black tee photos and the pendant photo are the images supplied by The Stan Co. The pendant's ordering status depends on confirmed pricing and stock.
 - The Rebel tee price and sizes are examples. Replace them with the approved price, measurements and stock by colour/size before opening orders. The current sizes do not represent inventory.
 - Main sections can be shared with `/#upcoming` and `/#oct23ed`. Product links are `/#product/rebel-classic` and `/#product/king-of-the-sea`.
 - Contact and drop-update forms prepare an email draft for the customer to send. Use a consent-aware mailing service for automated subscriptions, code emails, launch alerts and unsubscribes.
