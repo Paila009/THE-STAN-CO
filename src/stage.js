@@ -129,7 +129,7 @@ export function mountBrowse(section) {
 export function mountOpening(hero) {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const progress = document.querySelector('.page-progress');
-  const title = hero.querySelector('#opening-title');
+  const slate = document.querySelector('.opening-slate');
   const startsAtOpening = !location.hash || location.hash === '#top';
   let visible = true;
   let scrollFrame = 0;
@@ -138,16 +138,21 @@ export function mountOpening(hero) {
   function finishOpening() {
     clearTimeout(openingTimeout);
     hero.classList.remove('is-opening');
+    slate.hidden = true;
   }
 
   if (startsAtOpening && !reduced.matches && window.scrollY < 80) {
+    slate.hidden = false;
     hero.classList.add('is-opening');
-    openingTimeout = window.setTimeout(finishOpening, 1550);
+    openingTimeout = window.setTimeout(finishOpening, 1720);
   }
 
-  title.addEventListener('animationend', (event) => {
-    if (event.animationName === 'signature-arrival') finishOpening();
+  slate.addEventListener('animationend', (event) => {
+    if (event.target === slate) slate.hidden = true;
   });
+  document.querySelector('.skip-link').addEventListener('focus', finishOpening);
+  document.querySelector('.masthead').addEventListener('focusin', finishOpening);
+  hero.addEventListener('focusin', finishOpening);
   function updateScroll() {
     scrollFrame = 0;
     if (reduced.matches) return;
@@ -155,9 +160,7 @@ export function mountOpening(hero) {
     progress.style.setProperty('--page-read', Math.min(1, window.scrollY / maximum));
     if (!visible) return;
     const movement = Math.max(0, Math.min(1, -hero.getBoundingClientRect().top / hero.offsetHeight));
-    const amplitude = innerWidth < 681 ? .46 : 1;
-    hero.style.setProperty('--title-slide', `${movement * -58 * amplitude}px`);
-    hero.style.setProperty('--fashion-slide', `${movement * 34 * amplitude}px`);
+    hero.style.setProperty('--garment-rise', `${movement * -22}px`);
   }
 
   function scheduleScroll() {
