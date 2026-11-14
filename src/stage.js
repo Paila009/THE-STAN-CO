@@ -1,7 +1,7 @@
 import { collectionPortrait, collections, teeTypes } from './collections.js';
 import './hero-strip.css';
 
-const chapterId = (slug) => ({ prabhas: 'rebelwood', 'allu-arjun': 'bhaai' })[slug] ?? slug;
+const chapterId = (slug) => slug === 'allu-arjun' ? 'bhaai' : slug;
 
 export function mountBrowse(section) {
   const modes = section.querySelectorAll('[data-browse-mode]');

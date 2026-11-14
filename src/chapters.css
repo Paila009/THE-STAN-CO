@@ -299,6 +299,12 @@
   object-fit: contain;
 }
 
+.actor-chapter__garment--photo {
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  padding: 0;
+  background: #ece7ce;
+}
+
 .actor-chapter__garment-front {
   opacity: 0;
   transition: opacity 230ms ease;
@@ -450,6 +456,14 @@
     min-height: 44px;
     padding-inline: 9px;
   }
+}
+
+#october-23rd-drop .actor-chapter__heading h2 { font-size: clamp(38px, 6.7vw, 108px); }
+#october-23rd-drop .actor-chapter__card-name { font-size: clamp(18px, 2.35vw, 36px); }
+
+@media (max-width: 760px) {
+  #october-23rd-drop .actor-chapter__heading h2 { font-size: clamp(30px, 8.4vw, 64px); }
+  #october-23rd-drop .actor-chapter__card-name { font-size: clamp(16px, 4.5vw, 30px); }
 }
 
 /* Give the Frame District portrait its own space beside or below the title. */

@@ -10,6 +10,8 @@ const firstShowProducts = [
 ].map(product => ({ ...product, collection: 'first-show', collectionName: 'First Show' }));
 
 export const products = [...actorProducts, ...firstShowProducts];
+const optionsFor = product => product.variants?.map(variant => ({ ...product, ...variant })) ?? [product];
+const productOptions = products.flatMap(optionsFor);
 
 const searchWords = text => text.toLocaleLowerCase('en-IN').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
 const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
@@ -18,11 +20,18 @@ const hoodieSizeChart = [[44, 26], [46, 27], [48, 28], [50, 29], [52, 30]];
 const cartKey = 'the-stan-co:first-show:bag';
 const rupees = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
 const price = amount => rupees.format(amount / 100);
-const productFor = slug => products.find(product => product.slug === slug);
-const garmentName = product => product.garment === 'hoodie' || /\btee$/i.test(product.name) ? product.name : product.name + ' tee';
+const productFor = slug => productOptions.find(product => product.slug === slug);
+const garmentName = product => product.image || product.garment === 'hoodie' || /\btee$/i.test(product.name) ? product.name : product.name + ' tee';
 const photoDescription = (product, side) => `${product.color} ${garmentName(product)}, ${side} view`;
-const art = (product, side = 'front') => '/images/' + product.slug + '-' + side + '.webp';
-const quantityInStock = (product, size) => product.stock[sizes.indexOf(size)] ?? 0;
+const art = (product, side = 'front') => product.image ?? '/images/' + product.slug + '-' + side + '.webp';
+const isAccessory = product => product.garment === 'accessory';
+const quantityLimit = (product, size) => {
+  if (isAccessory(product)) return size === '' ? Infinity : 0;
+  const index = sizes.indexOf(size);
+  if (index < 0) return 0;
+  return product.stock?.[index] ?? Infinity;
+};
+const lineDescription = (product, size) => size ? product.color + ' / ' + size : product.color;
 
 function readBag() {
   try {
@@ -32,7 +41,7 @@ function readBag() {
     for (const item of saved) {
       const product = productFor(item?.slug);
       if (!product || !Number.isInteger(item.quantity) || item.quantity <= 0) continue;
-      const limit = quantityInStock(product, item.size);
+      const limit = quantityLimit(product, item.size);
       if (limit <= 0) continue;
       const line = bag.find(entry => entry.slug === product.slug && entry.size === item.size);
       if (line) line.quantity = Math.min(limit, line.quantity + item.quantity);
@@ -45,9 +54,11 @@ function readBag() {
 }
 
 function catalogCard(product) {
+  const back = product.image ? '' : '<img class="stan-card-back" src="' + art(product, 'back') + '" width="780" height="900" alt="" loading="lazy" decoding="async">';
+  const colourLabel = product.variants ? product.variants.length + ' colours' : product.color;
   return '<article class="stan-card"><button class="stan-card-button" data-product="' + product.slug + '" aria-label="View ' + garmentName(product) + '">'
-    + '<span class="stan-card-art"><img src="' + art(product) + '" width="780" height="900" alt="" loading="lazy" decoding="async"><img class="stan-card-back" src="' + art(product, 'back') + '" width="780" height="900" alt="" loading="lazy" decoding="async"><span class="stan-card-open" aria-hidden="true">↗</span></span>'
-    + '<span class="stan-card-meta"><span class="stan-card-name">' + product.name + '</span><span class="stan-card-price">' + price(product.price) + '</span></span><span class="stan-card-color">' + product.color + ' · ' + product.collectionName + '</span></button></article>';
+    + '<span class="stan-card-art"><img src="' + art(product) + '" width="780" height="900" alt="" loading="lazy" decoding="async">' + back + '<span class="stan-card-open" aria-hidden="true">↗</span></span>'
+    + '<span class="stan-card-meta"><span class="stan-card-name">' + product.name + '</span><span class="stan-card-price">' + price(product.price) + '</span></span><span class="stan-card-color">' + colourLabel + ' · ' + product.collectionName + '</span></button></article>';
 }
 
 export function mountShop({ shop, dialog }) {
@@ -71,7 +82,7 @@ export function mountShop({ shop, dialog }) {
     ...collections,
     { slug: 'first-show', name: 'First Show' },
   ];
-  const colours = [...new Set(products.map(product => product.color))].sort();
+  const colours = [...new Set(productOptions.map(product => product.color))].sort();
   const typeNames = new Map(teeTypes.map(type => [type.slug, type.name]));
   const initialLimit = 8;
   let expanded = false;
@@ -104,13 +115,14 @@ export function mountShop({ shop, dialog }) {
 
   function renderCatalog() {
     const keywords = searchWords(search.value).split(' ').filter(Boolean);
-    const visible = products.filter(product => {
+    const matches = product => {
       if (collectionFilter.value !== 'all' && collectionFilter.value !== product.collection) return false;
       if (typeFilter.value && typeFilter.value !== product.teeType) return false;
       if (colourFilter.value && colourFilter.value !== product.color) return false;
       const text = searchWords([product.name, product.collection, product.collectionName, product.color, product.description, typeNames.get(product.teeType)].join(' '));
       return keywords.every(keyword => text.includes(keyword));
-    });
+    };
+    const visible = products.map(product => optionsFor(product).find(matches)).filter(Boolean);
 
     if (sort.value === 'low') visible.sort((a, b) => a.price - b.price);
     if (sort.value === 'high') visible.sort((a, b) => b.price - a.price);
@@ -185,10 +197,14 @@ export function mountShop({ shop, dialog }) {
 
   function showProduct() {
     const product = activeProduct;
+    if (product.image) {
+      showPhotoProduct(product);
+      return;
+    }
     const isHoodie = product.garment === 'hoodie';
     const measurements = isHoodie ? hoodieSizeChart : sizeChart;
     const modelControls = isHoodie ? '' : '<button type="button" class="stan-view-3d" data-shop-action="view-3d" aria-pressed="false">View 3D</button>';
-    const available = sizes.map(size => quantityInStock(product, size) - (bag.find(item => item.slug === product.slug && item.size === size)?.quantity || 0));
+    const available = sizes.map(size => quantityLimit(product, size) - (bag.find(item => item.slug === product.slug && item.size === size)?.quantity || 0));
     show('product', product.name, '<div class="stan-product"><div><div class="stan-product-art"><img id="stan-product-photo" src="' + art(product, side) + '" width="780" height="900" alt="' + photoDescription(product, side) + '"><div class="hero-render stan-product-render" aria-hidden="true"></div></div>'
       + '<div class="stan-sides" role="group" aria-label="Garment view"><button type="button" data-shop-action="front" aria-pressed="' + (side === 'front') + '">Front</button><button type="button" data-shop-action="back" aria-pressed="' + (side === 'back') + '">Back</button>' + modelControls + '</div><p class="stan-viewer-status" role="status"></p></div>'
       + '<div class="stan-product-details"><div class="stan-product-price">' + price(product.price) + '</div><p><span class="stan-swatch" style="--swatch:' + product.hex + '"></span>' + product.color + ' · ' + product.collectionName + '</p><p>' + product.description + '</p>'
@@ -199,6 +215,22 @@ export function mountShop({ shop, dialog }) {
       + sizes.map((size, index) => '<button type="button" data-size="' + size + '" aria-pressed="' + (selectedSize === size) + '"' + (available[index] <= 0 ? ' disabled aria-label="' + size + ', unavailable"' : '') + '>' + size + '</button>').join('')
       + '</div><p class="stan-status" role="status"></p><button type="button" class="stan-cta" data-shop-action="add">Add to bag <span aria-hidden="true">↗</span></button>'
       + '<details class="stan-exchanges"><summary>Shipping &amp; exchanges</summary><p>Exchanges only. Delivery and exchange terms will be confirmed before launch.</p></details></div></div>', { wide: true });
+  }
+
+  function showPhotoProduct(product, focus) {
+    const colours = product.variants ? '<div class="stan-sides" role="group" aria-label="Colour">'
+      + product.variants.map(variant => '<button type="button" data-colour-option="' + variant.slug + '" aria-pressed="' + (variant.slug === product.slug) + '">' + variant.color + '</button>').join('')
+      + '</div>' : '';
+    const sizeOptions = isAccessory(product) ? '' : '<div class="stan-size-row"><strong>Select size</strong></div>'
+      + '<div class="stan-sizes" role="group" aria-label="T-shirt sizes">'
+      + sizes.map(size => '<button type="button" data-size="' + size + '" aria-pressed="' + (selectedSize === size) + '">' + size + '</button>').join('')
+      + '</div>';
+    const availability = isAccessory(product) ? 'Availability will be confirmed before launch.' : 'Sizes and availability will be confirmed before launch.';
+    show('product', product.name, '<div class="stan-product"><div class="stan-product-art">'
+      + '<img src="' + product.image + '" alt="' + photoDescription(product, 'front') + '"></div>'
+      + '<div class="stan-product-details"><div class="stan-product-price">' + price(product.price) + '</div><p>' + product.description + '</p>'
+      + colours + sizeOptions + '<p class="stan-muted">' + availability + '</p><p class="stan-status" role="status"></p>'
+      + '<button type="button" class="stan-cta" data-shop-action="add">Add to bag <span aria-hidden="true">↗</span></button></div></div>', { wide: true, focus });
   }
 
   function changeSide(nextSide) {
@@ -255,19 +287,20 @@ export function mountShop({ shop, dialog }) {
   }
 
   function addProduct() {
-    if (!selectedSize) {
+    const size = isAccessory(activeProduct) ? '' : selectedSize;
+    if (size === undefined) {
       dialog.querySelector('.stan-status').textContent = 'Choose a size to add this item.';
       dialog.querySelector('[data-size]:enabled')?.focus();
       return;
     }
-    const existing = bag.find(item => item.slug === activeProduct.slug && item.size === selectedSize);
-    const limit = quantityInStock(activeProduct, selectedSize);
+    const existing = bag.find(item => item.slug === activeProduct.slug && item.size === size);
+    const limit = quantityLimit(activeProduct, size);
     if (!limit || (existing && existing.quantity >= limit)) {
       dialog.querySelector('.stan-status').textContent = 'You’ve reached the available quantity for this size.';
       return;
     }
     if (existing) existing.quantity += 1;
-    else bag.push({ slug: activeProduct.slug, size: selectedSize, quantity: 1 });
+    else bag.push({ slug: activeProduct.slug, size, quantity: 1 });
     saveBag();
     showBag();
   }
@@ -278,10 +311,11 @@ export function mountShop({ shop, dialog }) {
       const lines = bag.map(item => {
         const product = productFor(item.slug);
         const key = item.slug + ':' + item.size;
-        return '<li class="stan-bag-item"><img src="' + art(product) + '" alt="" width="70" height="80"><div><h3>' + product.name + '</h3><p>' + product.color + ' / ' + item.size + '</p>'
-          + '<div class="stan-quantity"><button type="button" data-shop-action="decrease" data-line="' + key + '" aria-label="Decrease ' + product.name + ' size ' + item.size + ' quantity">−</button><span aria-label="Quantity">' + item.quantity + '</span>'
-          + '<button type="button" data-shop-action="increase" data-line="' + key + '" aria-label="Increase ' + product.name + ' size ' + item.size + ' quantity"' + (item.quantity >= quantityInStock(product, item.size) ? ' disabled' : '') + '>+</button>'
-          + '<button type="button" class="stan-remove" data-shop-action="remove" data-line="' + key + '" aria-label="Remove ' + product.name + ' size ' + item.size + '">Remove</button></div></div><strong>' + price(product.price * item.quantity) + '</strong></li>';
+        const label = product.name + ', ' + lineDescription(product, item.size);
+        return '<li class="stan-bag-item"><img src="' + art(product) + '" alt="" width="70" height="80"><div><h3>' + product.name + '</h3><p>' + lineDescription(product, item.size) + '</p>'
+          + '<div class="stan-quantity"><button type="button" data-shop-action="decrease" data-line="' + key + '" aria-label="Decrease quantity of ' + label + '">−</button><span aria-label="Quantity">' + item.quantity + '</span>'
+          + '<button type="button" data-shop-action="increase" data-line="' + key + '" aria-label="Increase quantity of ' + label + '"' + (item.quantity >= quantityLimit(product, item.size) ? ' disabled' : '') + '>+</button>'
+          + '<button type="button" class="stan-remove" data-shop-action="remove" data-line="' + key + '" aria-label="Remove ' + label + '">Remove</button></div></div><strong>' + price(product.price * item.quantity) + '</strong></li>';
       }).join('');
       content = '<ul class="stan-bag-lines">' + lines + '</ul><div class="stan-total"><span>Subtotal</span><strong>' + price(subtotal()) + '</strong></div>'
         + '<p class="stan-muted">Shipping and tax will be confirmed before launch.</p><button type="button" class="stan-cta" data-shop-action="checkout">Checkout preview <span aria-hidden="true">↗</span></button>';
@@ -293,13 +327,13 @@ export function mountShop({ shop, dialog }) {
     const item = bag.find(entry => entry.slug + ':' + entry.size === key);
     if (!item) return;
     const product = productFor(item.slug);
-    if (action === 'increase') item.quantity = Math.min(quantityInStock(product, item.size), item.quantity + 1);
+    if (action === 'increase') item.quantity = Math.min(quantityLimit(product, item.size), item.quantity + 1);
     if (action === 'decrease') item.quantity -= 1;
     if (action === 'remove' || item.quantity <= 0) bag = bag.filter(entry => entry !== item);
     saveBag();
     let focus;
     if (bag.includes(item)) {
-      const nextAction = action === 'increase' && item.quantity === quantityInStock(product, item.size) ? 'decrease' : action;
+      const nextAction = action === 'increase' && item.quantity === quantityLimit(product, item.size) ? 'decrease' : action;
       focus = '[data-shop-action="' + nextAction + '"][data-line="' + key + '"]';
     }
     showBag(focus);
@@ -337,7 +371,7 @@ export function mountShop({ shop, dialog }) {
     }
     const rows = bag.map(item => {
       const product = productFor(item.slug);
-      return '<tr><th scope="row">' + product.name + '<small>' + product.color + ' / ' + item.size + '</small></th><td>' + item.quantity + '</td><td>' + price(product.price) + '</td><td>' + price(product.price * item.quantity) + '</td></tr>';
+      return '<tr><th scope="row">' + product.name + '<small>' + lineDescription(product, item.size) + '</small></th><td>' + item.quantity + '</td><td>' + price(product.price) + '</td><td>' + price(product.price * item.quantity) + '</td></tr>';
     }).join('');
     show('invoice', 'Invoice preview', '<button type="button" class="stan-link-button stan-back-link" data-shop-action="checkout">← Back to checkout</button>'
       + '<div class="stan-invoice"><div class="stan-invoice-head"><strong>THE STAN CO.</strong><span class="stan-invoice-sample stan-mono">Sample invoice</span></div>'
@@ -364,6 +398,12 @@ export function mountShop({ shop, dialog }) {
     if (event.target === dialog) {
       const rect = dialog.getBoundingClientRect();
       if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) closeDialog();
+      return;
+    }
+    const colour = event.target.closest('[data-colour-option]');
+    if (colour) {
+      activeProduct = productFor(colour.dataset.colourOption);
+      showPhotoProduct(activeProduct, '[data-colour-option="' + activeProduct.slug + '"]');
       return;
     }
     const size = event.target.closest('[data-size]');

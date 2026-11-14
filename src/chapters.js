@@ -2,8 +2,8 @@ import './chapters.css';
 import { collectionPortrait, collections } from './collections.js';
 
 const artDirection = {
-  prabhas: {
-    id: 'rebelwood',
+  'october-23rd-drop': {
+    legacyId: 'rebelwood',
     accent: '#ffb47e',
     ink: '#210e0b',
     glow: '#823c21',
@@ -76,18 +76,23 @@ function productCard(product, index, products) {
   const hoodie = product.garment === 'hoodie';
   const garmentName = hoodie ? 'hoodie' : 'tee';
   const nameHasGarment = product.name.toLowerCase().endsWith(' ' + garmentName);
-  const label = nameHasGarment ? product.name : `${product.name} ${garmentName}`;
+  const colours = product.variants ? `${product.variants.length} colours` : product.color;
+  const price = money.format(product.price / 100);
+  const label = product.image
+    ? `${product.name}, ${colours}, ${price}`
+    : nameHasGarment ? product.name : `${product.name} ${garmentName}`;
+  const photos = product.image
+    ? `<img src="${product.image}" alt="" loading="lazy" decoding="async">`
+    : `<img src="/images/${product.slug}-back.webp" alt="" width="780" height="900" loading="lazy" decoding="async">
+       <img class="actor-chapter__garment-front" src="/images/${product.slug}-front.webp" alt="" width="780" height="900" loading="lazy" decoding="async">`;
   const side = products.length === 1 || index > 0 ? 1 : -1;
 
   return `
     <li class="actor-chapter__card" style="--card-side:${side}">
       <a href="#product/${product.slug}" class="actor-chapter__product" data-product="${product.slug}" aria-label="View ${label}">
-        <span class="actor-chapter__garment">
-          <img src="/images/${product.slug}-back.webp" alt="" width="780" height="900" loading="lazy" decoding="async">
-          <img class="actor-chapter__garment-front" src="/images/${product.slug}-front.webp" alt="" width="780" height="900" loading="lazy" decoding="async">
-        </span>
+        <span class="actor-chapter__garment${product.image ? ' actor-chapter__garment--photo' : ''}">${photos}</span>
         <span class="actor-chapter__card-name">${product.name}</span>
-        <span class="actor-chapter__card-details"><span>${product.color} · ${money.format(product.price / 100)}</span><span aria-hidden="true">↗</span></span>
+        <span class="actor-chapter__card-details"><span>${colours} · ${price}</span><span aria-hidden="true">↗</span></span>
       </a>
     </li>`;
 }
@@ -103,9 +108,11 @@ function chapterMarkup(collection, index) {
   const next = nextCollection && artDirection[nextCollection.slug];
   const nextId = next?.id ?? nextCollection?.slug ?? 'shop';
   const nextLabel = nextCollection?.name ?? 'All clothing';
-  const featured = collection.slug === 'prabhas' || collection.slug === 'allu-arjun' ? ' actor-chapter--featured' : '';
+  const isOctoberDrop = collection.slug === 'october-23rd-drop';
+  const featured = isOctoberDrop || collection.slug === 'allu-arjun' ? ' actor-chapter--featured' : '';
   const single = collection.products.length === 1;
   const garmentLabel = collection.products[0].garment === 'hoodie' ? 'hoodie' : 'tee';
+  const cardLabel = isOctoberDrop ? 'products' : garmentLabel + (single ? '' : 's');
 
   return `
     <article class="actor-chapter${featured}" id="${id}" aria-labelledby="${id}-title" data-actor-chapter="${collection.slug}" style="--actor-ink:${direction.ink};--actor-glow:${direction.glow};--actor-accent:${direction.accent}">
@@ -122,12 +129,12 @@ function chapterMarkup(collection, index) {
           <h2 id="${id}-title"><span>${name}</span></h2>
           <p class="actor-chapter__description">${collection.description}</p>
         </header>
-        <ul class="actor-chapter__cards${single ? ' actor-chapter__cards--single' : ''}" data-chapter-cards aria-label="${name} ${garmentLabel}${single ? '' : 's'}">
+        <ul class="actor-chapter__cards${single ? ' actor-chapter__cards--single' : ''}" data-chapter-cards aria-label="${name} ${cardLabel}">
           ${collection.products.map(productCard).join('')}
         </ul>
         <footer class="actor-chapter__footer">
           ${direction.alternate ? `
-            <div class="actor-chapter__looks" role="group" aria-label="Rebelwood portrait">
+            <div class="actor-chapter__looks" role="group" aria-label="${name} portrait">
               <button type="button" data-chapter-look="0" aria-pressed="true">White suit</button>
               <button type="button" data-chapter-look="1" aria-pressed="false">Dark suit</button>
             </div>

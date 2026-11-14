@@ -27,19 +27,24 @@ export const teeTypes = [
 
 const collectionDetails = [
   {
-    slug: 'prabhas',
-    name: 'Rebelwood',
-    description: 'Carved timber, split ridges, and after-dark graphics.',
+    slug: 'october-23rd-drop',
+    name: 'October 23rd Drop',
+    description: 'The Original Rebel Classic T-shirt and the King of the Sea pendant.',
     items: [
       {
-        slug: 'rebelwood', teeType: 'graphic', name: 'Rebelwood', color: 'Washed black', hex: '#353535',
-        price: 139900, stock: [3, 8, 9, 5, 3],
-        description: 'A timber-ring chest badge and a sun splitting the ridge across the back.',
+        slug: 'original-rebel', garment: 'tee', teeType: 'typography', name: 'The Original Rebel Classic T-shirt',
+        price: 59900,
+        description: 'A classic crew-neck T-shirt with a small rebel print on the chest.',
+        variants: [
+          { slug: 'original-rebel', color: 'Forest green', hex: '#103729', image: '/images/rebel-tee-green.webp' },
+          { slug: 'original-rebel-black', color: 'Black', hex: '#222222', image: '/images/rebel-tee-black.webp' },
+        ],
       },
       {
-        slug: 'midnight-rebel', teeType: 'typography', name: 'Midnight Rebel', color: 'Bone', hex: '#e4ddcb',
-        price: 129900, stock: [2, 6, 7, 4, 2],
-        description: 'A midnight star on the chest and circular lettering that radiates across the back.',
+        slug: 'king-of-the-sea-pendant', garment: 'accessory', name: 'King of the Sea Pendant',
+        color: 'Natural shell', hex: '#e3c59d', image: '/images/king-of-the-sea-pendant.webp',
+        price: 19900,
+        description: 'A cream and amber shell pendant on a rust-and-black twisted cord.',
       },
     ],
   },
@@ -155,6 +160,7 @@ export const collections = collectionDetails.map(({ items, ...collection }) => (
   featured: items[0].slug,
   products: items.map(product => ({
     ...product,
+    ...product.variants?.[0],
     collection: collection.slug,
     collectionName: collection.name,
     actor: collection.name,
@@ -164,7 +170,7 @@ export const collections = collectionDetails.map(({ items, ...collection }) => (
 export const actorProducts = collections.flatMap(collection => collection.products);
 
 const collectionPortraits = {
-  prabhas: 'model-rebelwood-white',
+  'october-23rd-drop': 'model-rebelwood-white',
   'allu-arjun': 'model-grain-grit',
   'mahesh-babu': 'model-motion-archive',
   'ram-charan': 'model-heatwave-press',
