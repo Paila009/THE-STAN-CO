@@ -132,9 +132,7 @@ export function mountOpening(hero) {
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
   const progress = document.querySelector('.page-progress');
   const lookbook = hero.querySelector('.premiere-lookbook');
-  const motion = hero.querySelector('[data-hero-motion]');
   let visible = true;
-  let paused = false;
   let scrollFrame = 0;
   let openingTimeout;
 
@@ -160,20 +158,13 @@ export function mountOpening(hero) {
   }
 
   function syncMotion() {
-    hero.classList.toggle('has-motion', !paused && !reduced.matches);
+    hero.classList.toggle('has-motion', !reduced.matches);
     hero.classList.toggle('is-in-view', visible && !document.hidden);
-    motion.hidden = reduced.matches;
-    if (paused || reduced.matches || !visible || document.hidden) resetPointer();
+    if (reduced.matches || !visible || document.hidden) resetPointer();
   }
 
-  motion.addEventListener('click', () => {
-    paused = !paused;
-    motion.textContent = paused ? 'Play animation' : 'Pause animation';
-    syncMotion();
-    scheduleScroll();
-  });
   lookbook.addEventListener('pointermove', (event) => {
-    if (!finePointer.matches || event.pointerType === 'touch' || reduced.matches || paused || intro?.active()) return;
+    if (!finePointer.matches || event.pointerType === 'touch' || reduced.matches || intro?.active()) return;
     const bounds = lookbook.getBoundingClientRect();
     const x = (event.clientX - bounds.left) / bounds.width - .5;
     const y = (event.clientY - bounds.top) / bounds.height - .5;
@@ -194,7 +185,7 @@ export function mountOpening(hero) {
     if (reduced.matches) return;
     const maximum = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     progress.style.setProperty('--page-read', Math.min(1, window.scrollY / maximum));
-    if (!visible || paused) return;
+    if (!visible) return;
     const movement = Math.max(0, Math.min(1, -hero.getBoundingClientRect().top / hero.offsetHeight));
     hero.style.setProperty('--garment-rise', `${movement * -22}px`);
   }

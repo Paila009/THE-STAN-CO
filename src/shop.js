@@ -26,6 +26,7 @@ const photoDescription = (product, side) => `${product.color} ${garmentName(prod
 const art = (product, side = 'front') => product.image ?? '/images/' + product.slug + '-' + side + '.webp';
 const isAccessory = product => product.garment === 'accessory';
 const quantityLimit = (product, size) => {
+  if (product.comingSoon) return 0;
   if (isAccessory(product)) return size === '' ? Infinity : 0;
   const index = sizes.indexOf(size);
   if (index < 0) return 0;
@@ -54,10 +55,16 @@ function readBag() {
 }
 
 function catalogCard(product) {
+  const photo = '<img src="' + art(product) + '" width="780" height="900" alt="" loading="lazy" decoding="async">';
+  if (product.comingSoon) {
+    return '<article class="stan-card stan-card--upcoming"><div class="stan-card-art">' + photo + '</div>'
+      + '<div class="stan-card-meta"><span class="stan-card-name">' + product.name + '</span>'
+      + '<span class="stan-coming-soon">Coming soon</span></div><p class="stan-card-color">' + product.color + ' · ' + product.collectionName + '</p></article>';
+  }
   const back = product.image ? '' : '<img class="stan-card-back" src="' + art(product, 'back') + '" width="780" height="900" alt="" loading="lazy" decoding="async">';
   const colourLabel = product.variants ? product.variants.length + ' colours' : product.color;
   return '<article class="stan-card"><button class="stan-card-button" data-product="' + product.slug + '" aria-label="View ' + garmentName(product) + '">'
-    + '<span class="stan-card-art"><img src="' + art(product) + '" width="780" height="900" alt="" loading="lazy" decoding="async">' + back + '<span class="stan-card-open" aria-hidden="true">↗</span></span>'
+    + '<span class="stan-card-art">' + photo + back + '<span class="stan-card-open" aria-hidden="true">↗</span></span>'
     + '<span class="stan-card-meta"><span class="stan-card-name">' + product.name + '</span><span class="stan-card-price">' + price(product.price) + '</span></span><span class="stan-card-color">' + colourLabel + ' · ' + product.collectionName + '</span></button></article>';
 }
 
@@ -124,8 +131,11 @@ export function mountShop({ shop, dialog }) {
     };
     const visible = products.map(product => optionsFor(product).find(matches)).filter(Boolean);
 
-    if (sort.value === 'low') visible.sort((a, b) => a.price - b.price);
-    if (sort.value === 'high') visible.sort((a, b) => b.price - a.price);
+    if (sort.value !== 'drop') {
+      const direction = sort.value === 'low' ? 1 : -1;
+      visible.sort((a, b) => Number(!!a.comingSoon) - Number(!!b.comingSoon)
+        || (a.comingSoon ? 0 : direction * (a.price - b.price)));
+    }
 
     const displayed = expanded ? visible : visible.slice(0, initialLimit);
     grid.innerHTML = displayed.map(catalogCard).join('');
@@ -197,6 +207,13 @@ export function mountShop({ shop, dialog }) {
 
   function showProduct() {
     const product = activeProduct;
+    if (product.comingSoon) {
+      show('product', product.name, '<div class="stan-product stan-card--upcoming"><div class="stan-product-photo">'
+        + '<img src="' + art(product) + '" alt="' + photoDescription(product, 'front') + '"></div>'
+        + '<div class="stan-product-details"><span class="stan-coming-soon">Coming soon</span><p>' + product.description
+        + '</p></div></div>', { wide: true });
+      return;
+    }
     if (product.image) {
       showPhotoProduct(product);
       return;

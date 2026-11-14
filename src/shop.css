@@ -155,6 +155,16 @@
 .stan-card-name { margin: 0; font-size: clamp(1rem, 1.4vw, 1.25rem); letter-spacing: -0.03em; font-weight: 600; }
 .stan-card-price { font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
 .stan-card-color { display: block; margin: 0.25rem 0 0; color: #495969; font-size: 0.82rem; }
+.stan-card--upcoming :is(.stan-card-art, .stan-product-photo) img { opacity: .56; }
+.stan-coming-soon {
+  display: inline-block;
+  padding: .3rem .48rem;
+  background: #e6edf5;
+  color: #102c4d;
+  font: 600 .68rem/1.2 var(--mono);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
 
 .stan-visually-hidden {
   position: absolute;

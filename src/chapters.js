@@ -77,21 +77,33 @@ function productCard(product, index, products) {
   const garmentName = hoodie ? 'hoodie' : 'tee';
   const nameHasGarment = product.name.toLowerCase().endsWith(' ' + garmentName);
   const colours = product.variants ? `${product.variants.length} colours` : product.color;
+  const photos = product.image
+    ? `<img src="${product.image}" alt="" loading="lazy" decoding="async">`
+    : `<img src="/images/${product.slug}-back.webp" alt="" width="780" height="900" loading="lazy" decoding="async">
+       ${product.comingSoon ? '' : `<img class="actor-chapter__garment-front" src="/images/${product.slug}-front.webp" alt="" width="780" height="900" loading="lazy" decoding="async">`}`;
+  const side = products.length === 1 || index > 0 ? 1 : -1;
+  const productArt = `<span class="actor-chapter__garment${product.image ? ' actor-chapter__garment--photo' : ''}">${photos}</span>
+    <span class="actor-chapter__card-name">${product.name}</span>`;
+
+  if (product.comingSoon) {
+    return `
+      <li class="actor-chapter__card" style="--card-side:${side}">
+        <div class="actor-chapter__product actor-chapter__product--coming-soon">
+          ${productArt}
+          <span class="actor-chapter__availability">Coming soon</span>
+        </div>
+      </li>`;
+  }
+
   const price = money.format(product.price / 100);
   const label = product.image
     ? `${product.name}, ${colours}, ${price}`
     : nameHasGarment ? product.name : `${product.name} ${garmentName}`;
-  const photos = product.image
-    ? `<img src="${product.image}" alt="" loading="lazy" decoding="async">`
-    : `<img src="/images/${product.slug}-back.webp" alt="" width="780" height="900" loading="lazy" decoding="async">
-       <img class="actor-chapter__garment-front" src="/images/${product.slug}-front.webp" alt="" width="780" height="900" loading="lazy" decoding="async">`;
-  const side = products.length === 1 || index > 0 ? 1 : -1;
 
   return `
     <li class="actor-chapter__card" style="--card-side:${side}">
       <a href="#product/${product.slug}" class="actor-chapter__product" data-product="${product.slug}" aria-label="View ${label}">
-        <span class="actor-chapter__garment${product.image ? ' actor-chapter__garment--photo' : ''}">${photos}</span>
-        <span class="actor-chapter__card-name">${product.name}</span>
+        ${productArt}
         <span class="actor-chapter__card-details"><span>${colours} · ${price}</span><span aria-hidden="true">↗</span></span>
       </a>
     </li>`;
@@ -110,12 +122,13 @@ function chapterMarkup(collection, index) {
   const nextLabel = nextCollection?.name ?? 'All clothing';
   const isOctoberDrop = collection.slug === 'october-23rd-drop';
   const featured = isOctoberDrop || collection.slug === 'allu-arjun' ? ' actor-chapter--featured' : '';
+  const upcoming = collection.comingSoon ? ' actor-chapter--upcoming' : '';
   const single = collection.products.length === 1;
   const garmentLabel = collection.products[0].garment === 'hoodie' ? 'hoodie' : 'tee';
   const cardLabel = isOctoberDrop ? 'products' : garmentLabel + (single ? '' : 's');
 
   return `
-    <article class="actor-chapter${featured}" id="${id}" aria-labelledby="${id}-title" data-actor-chapter="${collection.slug}" style="--actor-ink:${direction.ink};--actor-glow:${direction.glow};--actor-accent:${direction.accent}">
+    <article class="actor-chapter${featured}${upcoming}" id="${id}" aria-labelledby="${id}-title" data-actor-chapter="${collection.slug}" style="--actor-ink:${direction.ink};--actor-glow:${direction.glow};--actor-accent:${direction.accent}">
       ${direction.legacyId ? `<span class="actor-chapter__legacy-anchor" id="${direction.legacyId}" aria-hidden="true"></span>` : ''}
       <div class="actor-chapter__scene">
         <div class="actor-chapter__field" aria-hidden="true"></div>
@@ -168,7 +181,7 @@ function setupLookSwitch(chapter) {
 
 function setupCardTilt(container, motion) {
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
-  for (const link of container.querySelectorAll('.actor-chapter__product')) {
+  for (const link of container.querySelectorAll('a.actor-chapter__product')) {
     function reset() {
       link.style.removeProperty('--card-tilt-x');
       link.style.removeProperty('--card-tilt-y');

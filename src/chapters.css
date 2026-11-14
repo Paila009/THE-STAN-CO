@@ -265,13 +265,13 @@
   border: 1px solid #102c4d26;
 }
 
-.actor-chapter__product:focus-visible {
+a.actor-chapter__product:focus-visible {
   transform: translateZ(36px) rotateZ(calc(var(--card-side) * -4deg));
   outline-color: var(--chapter-accent);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .actor-chapter__product:hover {
+  a.actor-chapter__product:hover {
     transform: translateZ(40px) rotateX(var(--card-tilt-x)) rotateY(var(--card-tilt-y)) rotateZ(calc(var(--card-side) * -4deg));
   }
 }
@@ -336,6 +336,31 @@
   font-size: 1rem;
   line-height: .8;
   color: var(--chapter-blue);
+}
+
+.actor-chapter__product--coming-soon {
+  background: rgb(255 248 241 / 76%);
+  border-color: #fff8f1a8;
+  box-shadow: 2px 2px 0 #eaded473, 4px 4px 0 #a1afc288, 10px 16px 28px #09152973;
+  pointer-events: none;
+}
+
+.actor-chapter__product--coming-soon .actor-chapter__garment {
+  background: #fff8f15c;
+}
+
+.actor-chapter__product--coming-soon img {
+  opacity: .63;
+}
+
+.actor-chapter__availability {
+  justify-self: start;
+  padding: .3rem .45rem;
+  border: 1px solid #102c4d2b;
+  background: var(--chapter-paper);
+  color: var(--chapter-navy);
+  font: 700 clamp(.56rem, 1vw, .74rem)/1.1 var(--mono, monospace);
+  text-transform: uppercase;
 }
 
 .actor-chapter__footer {
@@ -460,9 +485,18 @@
 #october-23rd-drop .actor-chapter__media { z-index: 3; }
 #october-23rd-drop :is(.actor-chapter__cards, .actor-chapter__footer) { z-index: 4; }
 
+.actor-chapter--upcoming .actor-chapter__scene { overflow: clip; }
+.actor-chapter--upcoming .actor-chapter__media { z-index: 3; }
+.actor-chapter--upcoming :is(.actor-chapter__cards, .actor-chapter__footer) { z-index: 4; }
+
 @media (min-width: 761px) {
   #october-23rd-drop .actor-chapter__media { inset-inline-start: 26%; }
   #october-23rd-drop .actor-chapter__heading h2 { font-size: clamp(38px, 5.8vw, 94px); }
+  .actor-chapter--upcoming .actor-chapter__heading h2 {
+    max-inline-size: 48vw;
+    font-size: clamp(54px, 8.2vw, 140px);
+  }
+  .actor-chapter--upcoming .actor-chapter__media { inset-inline-start: 32%; }
 }
 
 @media (max-width: 760px) {
@@ -471,6 +505,9 @@
   #october-23rd-drop .actor-chapter__card-name { font-size: clamp(16px, 4.5vw, 30px); }
   #october-23rd-drop .actor-chapter__media { inset: clamp(128px, 31vw, 158px) -10% 29%; }
   #october-23rd-drop .actor-chapter__portrait { height: 100%; }
+  .actor-chapter--upcoming .actor-chapter__media { inset: clamp(155px, 28vw, 205px) -5% 12%; }
+  .actor-chapter--upcoming .actor-chapter__heading h2 { font-size: clamp(39px, 10vw, 80px); }
+  #off-grid .actor-chapter__media { inset-inline: -16% 8%; }
 }
 
 /* Give the Frame District portrait its own space beside or below the title. */

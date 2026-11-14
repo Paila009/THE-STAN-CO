@@ -29,6 +29,7 @@ const collectionDetails = [
   {
     slug: 'october-23rd-drop',
     name: 'October 23rd Drop',
+    comingSoon: false,
     description: 'The Original Rebel Classic T-shirt and the King of the Sea pendant.',
     items: [
       {
@@ -154,13 +155,15 @@ const collectionDetails = [
   },
 ];
 
-export const collections = collectionDetails.map(({ items, ...collection }) => ({
+export const collections = collectionDetails.map(({ items, comingSoon = true, ...collection }) => ({
   ...collection,
+  comingSoon,
   actor: collection.name,
   featured: items[0].slug,
   products: items.map(product => ({
     ...product,
     ...product.variants?.[0],
+    comingSoon,
     collection: collection.slug,
     collectionName: collection.name,
     actor: collection.name,
