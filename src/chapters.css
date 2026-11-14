@@ -454,8 +454,16 @@
   }
 }
 
+#october-23rd-drop .actor-chapter__scene { overflow: clip; }
 #october-23rd-drop .actor-chapter__heading h2 { font-size: clamp(38px, 6.7vw, 108px); }
 #october-23rd-drop .actor-chapter__card-name { font-size: clamp(18px, 2.35vw, 36px); }
+#october-23rd-drop .actor-chapter__media { z-index: 3; }
+#october-23rd-drop :is(.actor-chapter__cards, .actor-chapter__footer) { z-index: 4; }
+
+@media (min-width: 761px) {
+  #october-23rd-drop .actor-chapter__media { inset-inline-start: 26%; }
+  #october-23rd-drop .actor-chapter__heading h2 { font-size: clamp(38px, 5.8vw, 94px); }
+}
 
 @media (max-width: 760px) {
   #october-23rd-drop .actor-chapter__scene { min-height: clamp(675px, 175vw, 810px); }

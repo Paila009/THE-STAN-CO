@@ -213,6 +213,13 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
 
 .stan-product { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(1rem, 4vw, 2.25rem); }
 .stan-product-art { aspect-ratio: 1; touch-action: pan-y; }
+.stan-product-photo { align-self: start; background: #ede8cf; }
+.stan-product-photo img {
+  width: 100%;
+  height: auto;
+  max-height: min(68dvh, 34rem);
+  object-fit: contain;
+}
 .stan-product-render { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
 .stan-product-render canvas { display: block; width: 100%; height: 100%; }
 .stan-product-art.is-rendering { cursor: grab; }

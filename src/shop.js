@@ -226,7 +226,7 @@ export function mountShop({ shop, dialog }) {
       + sizes.map(size => '<button type="button" data-size="' + size + '" aria-pressed="' + (selectedSize === size) + '">' + size + '</button>').join('')
       + '</div>';
     const availability = isAccessory(product) ? 'Availability will be confirmed before launch.' : 'Sizes and availability will be confirmed before launch.';
-    show('product', product.name, '<div class="stan-product"><div class="stan-product-art">'
+    show('product', product.name, '<div class="stan-product"><div class="stan-product-photo">'
       + '<img src="' + product.image + '" alt="' + photoDescription(product, 'front') + '"></div>'
       + '<div class="stan-product-details"><div class="stan-product-price">' + price(product.price) + '</div><p>' + product.description + '</p>'
       + colours + sizeOptions + '<p class="stan-muted">' + availability + '</p><p class="stan-status" role="status"></p>'
