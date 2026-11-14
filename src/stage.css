@@ -38,18 +38,41 @@
 }
 .premiere-copy { position: relative; z-index: 2; min-width: 0; padding-block: 33px; }
 .premiere h1 {
-  font: 700 clamp(64px, 9.75vw, 175px)/.84 var(--landing-display);
+  font: 700 clamp(66px, 11vw, 186px)/.84 var(--landing-display);
   letter-spacing: -.035em;
 }
 .premiere-title-line { display: block; width: max-content; padding: .05em .08em .1em 0; margin-bottom: -.06em; overflow: clip; }
 .premiere-title-line > span { display: block; }
+.premiere-title-dot { color: #08447a; }
 .premiere-caption {
-  max-width: 29ch;
-  margin: clamp(16px, 2vw, 32px) 0 clamp(17px, 2.4vw, 36px);
-  font-size: clamp(18px, 2.05vw, 36px);
-  line-height: 1.13;
-  font-weight: 600;
-  letter-spacing: -.027em;
+  max-width: 33ch;
+  margin: clamp(13px, 1.75vw, 28px) 0 clamp(17px, 2.1vw, 34px);
+  font-size: clamp(16px, 1.65vw, 28px);
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -.025em;
+}
+.premiere-caption strong {
+  display: block;
+  margin-bottom: .18em;
+  font-size: 1.26em;
+  font-weight: 700;
+}
+.premiere .hero-actions { gap: clamp(8px, 1vw, 16px); }
+.premiere-offer {
+  display: grid;
+  align-content: center;
+  margin: 0;
+  padding: 6px clamp(9px, 1.1vw, 18px);
+  border-inline-start: 2px dashed var(--brand-ink);
+  background: var(--hero-cream);
+  font-size: clamp(11px, 1.15vw, 19px);
+  line-height: 1.15;
+}
+.premiere-offer strong {
+  color: var(--brand-ink);
+  font: 700 1.62em/1 var(--landing-display);
+  text-transform: uppercase;
 }
 .premiere .ticket-button {
   justify-content: space-between;
@@ -192,8 +215,8 @@
 @media (max-width: 730px) {
   .premiere-inner { grid-template-columns: 1fr; min-height: 0; }
   .premiere-copy { padding: 30px 0 10px; }
-  .premiere h1 { font-size: clamp(50px, 13.95vw, 107px); }
-  .premiere-caption { max-width: 30ch; margin: 13px 0 16px; font-size: clamp(17px, 4vw, 23px); }
+  .premiere h1 { font-size: clamp(65px, 19vw, 120px); }
+  .premiere-caption { margin: 13px 0 16px; font-size: clamp(16px, 4vw, 23px); }
   .premiere-lookbook { min-height: clamp(290px, 84vw, 495px); width: min(100%, 550px); justify-self: center; }
   .premiere-feature { inset: 0 11% 4% -4%; }
   .premiere-garment { right: 0; bottom: 6%; width: clamp(99px, 31vw, 181px); }
