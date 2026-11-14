@@ -1,7 +1,19 @@
-import { collectionPortrait, collections, teeTypes } from './collections.js';
 import './hero-strip.css';
 
-const chapterId = (slug) => ({ prabhas: 'rebelwood', 'allu-arjun': 'bhaai' })[slug] ?? slug;
+const stripItems = [
+  { name: '#oct23ed Drop', href: '#oct23ed', image: '/images/rebel-model.webp' },
+  { name: 'Graphic Tees', href: '#shop', type: 'graphic', image: '/images/hero-graphic-tee.webp' },
+  { name: 'Accessories', href: '#accessories', image: '/images/king-of-the-sea-pendant.webp' },
+  { name: 'Coming Soon', href: '#coming-soon', image: '/images/static-zip-hoodie-front.webp' },
+];
+const browseStyles = [
+  { name: 'Graphic Tees', href: '#shop', type: 'graphic', image: '/images/rebel-tee-black.webp' },
+  { name: 'Pullover Hoodies', href: '#shop', collection: 'after-hours', image: '/images/night-shift-hoodie-back.webp' },
+  { name: 'Zip Hoodies', href: '#shop', collection: 'off-grid', image: '/images/static-zip-hoodie-front.webp' },
+  { name: 'Accessories', href: '#shop', type: 'accessory', image: '/images/king-of-the-sea-pendant.webp' },
+];
+
+const shopFilter = ({ type, collection }) => type ? ` data-tee-type="${type}"` : collection ? ` data-collection="${collection}"` : '';
 
 export function mountBrowse(section) {
   const modes = section.querySelectorAll('[data-browse-mode]');
@@ -21,24 +33,21 @@ export function mountBrowse(section) {
   let position = 0;
   let groupWidth = 0;
 
-  function collectionItem({ name, slug }, duplicate = false) {
-    const destination = chapterId(slug);
-    const opener = duplicate ? `<span data-strip-target="${destination}"` : `<a href="#${destination}"`;
-    const closer = duplicate ? '</span>' : '</a>';
+  function collectionItem(item, duplicate = false) {
     return `<div class="hero-strip__item">
-      ${opener} class="hero-strip__link">
-        <img class="hero-strip__portrait" src="${collectionPortrait(slug)}" alt="" loading="lazy" decoding="async">
-        <span class="hero-strip__name" data-text="${name}">${name}</span>
-      ${closer}
+      <a href="${item.href}" class="hero-strip__link"${shopFilter(item)}${duplicate ? ' tabindex="-1"' : ''}>
+        <img class="hero-strip__portrait" src="${item.image}" alt="" loading="lazy" decoding="async">
+        <span class="hero-strip__name" data-text="${item.name}">${item.name}</span>
+      </a>
       <span class="hero-strip__separator" aria-hidden="true">✦</span>
     </div>`;
   }
 
-  track.innerHTML = `<div class="hero-strip__group">${collections.map((item) => collectionItem(item)).join('')}</div>
-    <div class="hero-strip__group" aria-hidden="true">${collections.map((item) => collectionItem(item, true)).join('')}</div>`;
+  track.innerHTML = `<div class="hero-strip__group">${stripItems.map((item) => collectionItem(item)).join('')}</div>
+    <div class="hero-strip__group" aria-hidden="true">${stripItems.map((item) => collectionItem(item, true)).join('')}</div>`;
   const firstGroup = track.firstElementChild;
-  types.querySelector('[data-browse-track]').innerHTML = teeTypes.map((type) => `
-    <a class="browse-card" href="#shop" data-tee-type="${type.slug}">
+  types.querySelector('[data-browse-track]').innerHTML = browseStyles.map((type) => `
+    <a class="browse-card" href="${type.href}"${shopFilter(type)}>
       <div class="browse-visual"><img src="${type.image}" alt="" loading="lazy" decoding="async"></div>
       <span class="browse-label"><strong>${type.name}</strong><span aria-hidden="true">↗</span></span>
     </a>`).join('');
@@ -110,10 +119,6 @@ export function mountBrowse(section) {
   viewport.addEventListener('wheel', pauseForInput, { passive: true });
   viewport.addEventListener('focusin', sync);
   viewport.addEventListener('focusout', () => queueMicrotask(sync));
-  viewport.addEventListener('click', (event) => {
-    const duplicate = event.target.closest('[data-strip-target]');
-    if (duplicate) window.location.hash = duplicate.dataset.stripTarget;
-  });
   reduced.addEventListener('change', sync);
   document.addEventListener('visibilitychange', sync);
   new ResizeObserver(() => {

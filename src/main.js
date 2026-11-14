@@ -1,16 +1,14 @@
 import './styles.css';
 import './header.css';
 import './stage.css';
-import './cinema.css';
-import { mountCinema } from './cinema.js';
+import './lookbook.css';
+import { mountLookbook } from './lookbook.js';
 import { mountShop } from './shop.js';
 import { mountBrowse, mountOpening } from './stage.js';
-import { mountChapters } from './chapters.js';
 
 mountOpening(document.querySelector('#top'));
 mountBrowse(document.querySelector('#browse'));
-mountChapters(document.querySelector('#actor-chapters'));
-mountCinema(document.querySelector('#cinema'));
+mountLookbook();
 mountShop({
   shop: document.querySelector('#shop'),
   dialog: document.querySelector('#shop-dialog'),
