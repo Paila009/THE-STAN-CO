@@ -1,13 +1,21 @@
 import './styles.css';
+import './header.css';
+import './stage.css';
+import './hero-strip.css';
+import './store-ui.css';
 import { mountAccount } from './account.js';
+import { mountDropSections } from './drop-sections.js';
 import { mountInformation } from './information.js';
 import { mountShop } from './shop.js';
 import { mountAnalytics } from './analytics.js';
+import { mountMotion } from './motion.js';
 
 mountAnalytics();
 mountAccount();
+mountDropSections();
 mountShop();
 mountInformation();
+mountMotion();
 
 const joinBar = document.querySelector('[data-guest-account]');
 const firstOffer = document.querySelector('[data-first-offer]');
@@ -35,49 +43,6 @@ try {
   }
 } catch {
   // Browsing and the account bar work without storage.
-}
-
-const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-if (!reducedMotion.matches) {
-  const intro = document.querySelector('.intro-splash');
-  try {
-    if (!location.hash && !location.search && !sessionStorage.getItem('stan:opened')) {
-      sessionStorage.setItem('stan:opened', '1');
-      intro.hidden = false;
-      intro.addEventListener('animationend', event => {
-        if (event.target === intro) intro.hidden = true;
-      });
-    }
-  } catch {
-    // Access to the site does not depend on session storage.
-  }
-
-  if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(entries => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        entry.target.classList.add('is-revealing');
-        observer.unobserve(entry.target);
-      }
-    }, { threshold: .14 });
-    document.querySelectorAll('[data-reveal]').forEach(element => observer.observe(element));
-  }
-
-  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    const visual = document.querySelector('[data-tilt]');
-    visual.addEventListener('pointermove', event => {
-      if (reducedMotion.matches) return;
-      const bounds = visual.getBoundingClientRect();
-      const x = (event.clientX - bounds.left) / bounds.width - .5;
-      const y = (event.clientY - bounds.top) / bounds.height - .5;
-      visual.style.setProperty('--tilt-x', `${x * 26}px`);
-      visual.style.setProperty('--tilt-y', `${y * 18}px`);
-    });
-    visual.addEventListener('pointerleave', () => {
-      visual.style.removeProperty('--tilt-x');
-      visual.style.removeProperty('--tilt-y');
-    });
-  }
 }
 
 const updates = document.querySelector('[data-updates-form]');
