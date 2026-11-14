@@ -43,8 +43,8 @@ const collectionDetails = [
         price: 59900,
         description: 'A classic crew-neck T-shirt with a small rebel print on the chest.',
         variants: [
-          { slug: 'original-rebel', color: 'Forest green', hex: '#103729', image: '/images/rebel-tee-green.webp' },
-          { slug: 'original-rebel-black', color: 'Black', hex: '#222222', image: '/images/rebel-tee-black.webp' },
+          { slug: 'original-rebel', color: 'Forest green', hex: '#103729', image: '/images/rebel-tee-green.webp', modelImage: '/images/model-rebel-forest-green.webp' },
+          { slug: 'original-rebel-black', color: 'Black', hex: '#222222', image: '/images/rebel-tee-black.webp', modelImage: '/images/model-rebel-black.webp' },
         ],
       },
       {

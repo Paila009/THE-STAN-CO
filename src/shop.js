@@ -105,11 +105,26 @@ function catalogCard(product) {
     + '<span class="stan-card-meta"><span class="stan-card-name">' + product.name + '</span><span class="stan-card-price">' + price(product.price) + '</span></span><span class="stan-card-color">' + colourLabel + ' · ' + product.collectionName + '</span></button></article>';
 }
 
+function relatedProducts(product) {
+  const currentSlug = product.variants?.[0].slug ?? product.slug;
+  const available = products.filter(item => item.slug !== currentSlug && !item.comingSoon);
+  const recommendations = [
+    ...available.filter(item => item.collection === product.collection),
+    ...available.filter(item => item.collection !== product.collection),
+    ...products.filter(item => item.slug !== currentSlug && item.collection === 'new-drop-incoming' && item.comingSoon),
+  ].slice(0, 3);
+  if (!recommendations.length) return '';
+  return '<section class="stan-product-related" aria-labelledby="stan-product-related-title">'
+    + '<h3 id="stan-product-related-title">You may also like</h3><div class="stan-catalog">'
+    + recommendations.map(catalogCard).join('') + '</div></section>';
+}
+
 export function mountShop({ shop, dialog }) {
   let bag = readBag();
   let activeProduct;
   let selectedSize;
   let side = 'front';
+  let photoView = 'model';
   let lastTrigger;
   let currentView;
   let preview;
@@ -239,17 +254,19 @@ export function mountShop({ shop, dialog }) {
     return bag.reduce((total, item) => total + productFor(item.slug).price * item.quantity, 0);
   }
 
-  function show(view, title, content, { wide = false, focus } = {}) {
+  function show(view, title, content, { wide = false, footer = '', focus, scrollTop = 0 } = {}) {
     stopViewer();
     currentView = view;
-    dialog.className = 'stan-dialog' + (wide ? ' stan-dialog-wide' : '') + (view === 'invoice' ? ' stan-dialog-invoice' : '');
+    dialog.className = 'stan-dialog' + (wide ? ' stan-dialog-wide' : '') + (footer ? ' stan-dialog-gallery' : '')
+      + (view === 'invoice' ? ' stan-dialog-invoice' : '');
     dialog.setAttribute('aria-labelledby', 'stan-dialog-title');
     dialog.removeAttribute('aria-label');
     dialog.innerHTML = '<div class="stan-dialog-head"><h2 id="stan-dialog-title" tabindex="-1">' + title + '</h2>'
       + '<button type="button" class="stan-dialog-close" data-shop-action="close" aria-label="Close">×</button></div>'
-      + '<div class="stan-dialog-body">' + content + '</div>';
+      + '<div class="stan-dialog-body">' + content + '</div>' + footer;
     if (!dialog.open) dialog.showModal();
     dialog.scrollTop = 0;
+    if (footer) dialog.querySelector('.stan-dialog-body').scrollTop = scrollTop;
     (focus && dialog.querySelector(focus) || dialog.querySelector('#stan-dialog-title')).focus({ preventScroll: true });
   }
 
@@ -281,20 +298,40 @@ export function mountShop({ shop, dialog }) {
       + '<details class="stan-exchanges"><summary>Shipping &amp; exchanges</summary><p>Exchanges only. Delivery and exchange terms will be confirmed before launch.</p></details></div></div>', { wide: true });
   }
 
-  function showPhotoProduct(product, focus) {
-    const colours = product.variants ? '<div class="stan-sides" role="group" aria-label="Colour">'
-      + product.variants.map(variant => '<button type="button" data-colour-option="' + variant.slug + '" aria-pressed="' + (variant.slug === product.slug) + '">' + variant.color + '</button>').join('')
+  function selectPhoto(view) {
+    photoView = view;
+    const onModel = view === 'model' && activeProduct.modelImage;
+    const photo = dialog.querySelector('.stan-gallery-stage img');
+    photo.src = onModel || activeProduct.image;
+    photo.alt = onModel ? 'Model wearing the ' + activeProduct.color.toLowerCase() + ' Rebel T-shirt' : photoDescription(activeProduct, 'front');
+    photo.parentElement.classList.toggle('stan-gallery-stage--model', Boolean(onModel));
+    for (const thumbnail of dialog.querySelectorAll('[data-product-photo]')) {
+      thumbnail.setAttribute('aria-pressed', String(thumbnail.dataset.productPhoto === view));
+    }
+  }
+
+  function showPhotoProduct(product, { focus, scrollTop } = {}) {
+    const hasModel = Boolean(product.modelImage);
+    const gallery = hasModel ? '<div class="stan-gallery-thumbnails" role="group" aria-label="Product photos">'
+      + '<button type="button" data-product-photo="model"><img src="' + product.modelImage + '" alt=""><span>On model</span></button>'
+      + '<button type="button" data-product-photo="front"><img src="' + product.image + '" alt=""><span>Front</span></button></div>' : '';
+    const colours = product.variants ? '<div class="stan-size-row"><strong>Colour</strong></div><div class="stan-sides stan-product-colours" role="group" aria-label="Colour">'
+      + product.variants.map(variant => '<button type="button" data-colour-option="' + variant.slug + '" aria-pressed="' + (variant.slug === product.slug) + '">'
+        + '<span class="stan-swatch" aria-hidden="true" style="--swatch:' + variant.hex + '"></span>' + variant.color + '</button>').join('')
       + '</div>' : '';
     const sizeOptions = isAccessory(product) ? '' : '<div class="stan-size-row"><strong>Select size</strong></div>'
       + '<div class="stan-sizes" role="group" aria-label="T-shirt sizes">'
       + sizes.map(size => '<button type="button" data-size="' + size + '" aria-pressed="' + (selectedSize === size) + '">' + size + '</button>').join('')
       + '</div>';
     const availability = isAccessory(product) ? 'Availability will be confirmed before launch.' : 'Sizes and availability will be confirmed before launch.';
-    show('product', product.name, '<div class="stan-product"><div class="stan-product-photo">'
-      + '<img src="' + product.image + '" alt="' + photoDescription(product, 'front') + '"></div>'
+    const footer = '<div class="stan-gallery-footer"><p class="stan-status" role="status"></p>'
+      + '<button type="button" class="stan-cta" data-shop-action="add">Add to bag <span aria-hidden="true">↗</span></button></div>';
+    show('product', product.name, '<div class="stan-photo-layout"><div class="stan-gallery' + (hasModel ? ' stan-gallery--with-thumbnails' : '') + '">'
+      + '<div class="stan-product-photo stan-gallery-stage"><img alt=""></div>' + gallery + '</div>'
       + '<div class="stan-product-details"><div class="stan-product-price">' + price(product.price) + '</div><p>' + product.description + '</p>'
-      + colours + sizeOptions + '<p class="stan-muted">' + availability + '</p><p class="stan-status" role="status"></p>'
-      + '<button type="button" class="stan-cta" data-shop-action="add">Add to bag <span aria-hidden="true">↗</span></button></div></div>', { wide: true, focus });
+      + colours + sizeOptions + '<p class="stan-muted">' + availability + '</p></div></div>' + relatedProducts(product),
+    { wide: true, footer, focus, scrollTop });
+    selectPhoto(hasModel ? photoView : 'front');
   }
 
   function changeSide(nextSide) {
@@ -466,8 +503,14 @@ export function mountShop({ shop, dialog }) {
     }
     const colour = event.target.closest('[data-colour-option]');
     if (colour) {
+      const scrollTop = dialog.querySelector('.stan-dialog-body').scrollTop;
       activeProduct = productFor(colour.dataset.colourOption);
-      showPhotoProduct(activeProduct, '[data-colour-option="' + activeProduct.slug + '"]');
+      showPhotoProduct(activeProduct, { focus: '[data-colour-option="' + activeProduct.slug + '"]', scrollTop });
+      return;
+    }
+    const thumbnail = event.target.closest('[data-product-photo]');
+    if (thumbnail) {
+      selectPhoto(thumbnail.dataset.productPhoto);
       return;
     }
     const size = event.target.closest('[data-size]');
@@ -533,10 +576,11 @@ export function mountShop({ shop, dialog }) {
     const product = productFor(trigger.dataset.product);
     if (!product) return;
     event.preventDefault();
-    lastTrigger = trigger;
+    if (!dialog.contains(trigger)) lastTrigger = trigger;
     activeProduct = product;
     selectedSize = undefined;
     side = 'front';
+    photoView = 'model';
     showProduct();
   });
 

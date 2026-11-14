@@ -241,6 +241,97 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
 .stan-dialog-body { padding: clamp(1rem, 3.3vw, 1.8rem); }
 .stan-dialog-body button { color: inherit; font-family: inherit; }
 
+.stan-dialog-gallery {
+  width: min(100% - 2rem, 64rem);
+  --shop-cream: #fff6e0;
+  --gallery-gutter: clamp(1rem, 3.3vw, 1.8rem);
+}
+.stan-dialog-gallery[open] {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.stan-dialog-gallery > .stan-dialog-head,
+.stan-gallery-footer { flex: none; }
+.stan-dialog-gallery > .stan-dialog-head { background: var(--shop-cream); }
+.stan-dialog-gallery > .stan-dialog-body {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y pinch-zoom;
+  scroll-behavior: auto;
+}
+.stan-photo-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.28fr) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(1rem, 3vw, 2rem);
+}
+.stan-gallery { display: grid; align-items: start; gap: .65rem; }
+.stan-gallery--with-thumbnails { grid-template-columns: 4.5rem minmax(0, 1fr); }
+.stan-gallery-stage {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--brand-ink);
+}
+.stan-gallery--with-thumbnails .stan-gallery-stage { grid-column: 2; grid-row: 1; }
+.stan-gallery .stan-gallery-stage--model {
+  background:
+    linear-gradient(90deg, #fff8f115 1px, transparent 1px) 50% / 34px 34px,
+    linear-gradient(#fff8f115 1px, transparent 1px) 50% / 34px 34px,
+    radial-gradient(ellipse at 60% 30%, #2e69a2, var(--brand-deep) 79%);
+}
+.stan-gallery .stan-gallery-stage img {
+  height: clamp(250px, 46dvh, 470px);
+  max-height: none;
+  object-position: center;
+}
+.stan-gallery .stan-gallery-stage--model img { object-position: center bottom; }
+.stan-gallery-thumbnails {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+}
+.stan-gallery-thumbnails button {
+  display: grid;
+  min-width: 0;
+  gap: .25rem;
+  padding: .25rem;
+  border: 1px solid #102c4d65;
+  border-radius: 2px;
+  background: var(--shop-cream);
+  text-align: center;
+  font: 600 .64rem/1.2 var(--mono);
+}
+.stan-gallery-thumbnails button[aria-pressed="true"] { border-color: var(--brand-ink); background: var(--brand-orange); }
+.stan-gallery-thumbnails img { width: 100%; height: 3.7rem; object-fit: contain; background: #ede8cf; }
+.stan-gallery-thumbnails button:first-child img { background: var(--brand-ink); }
+.stan-photo-layout .stan-product-price { font-size: clamp(1.7rem, 3.1vw, 2.35rem); line-height: 1.1; }
+.stan-photo-layout .stan-size-row { margin-top: 1rem; }
+.stan-photo-layout .stan-swatch { border-radius: 50%; border-color: #827f7c; }
+.stan-product-colours { margin-top: 0; }
+.stan-product-related { margin-top: 1.35rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+.stan-product-related h3 { margin: 0 0 .7rem; font: 600 1.45rem/1 var(--display); text-transform: uppercase; }
+.stan-product-related .stan-catalog { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 26rem; }
+.stan-product-related .stan-card-art { aspect-ratio: 1.4; }
+.stan-product-related .stan-card-price { white-space: nowrap; }
+.stan-gallery-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: .4rem 1rem;
+  padding: .65rem var(--gallery-gutter);
+  padding-bottom: max(.65rem, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  background: var(--shop-cream);
+}
+.stan-gallery-footer .stan-status { min-height: 0; margin: 0; }
+.stan-gallery-footer .stan-status:empty { display: none; }
+.stan-gallery-footer .stan-cta { max-width: 21rem; }
+
 .stan-product { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(1rem, 4vw, 2.25rem); }
 .stan-product-art { aspect-ratio: 1; touch-action: pan-y; }
 .stan-product-photo { align-self: start; background: #ede8cf; }
@@ -292,7 +383,7 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
 .stan-size-guide :is(td, th) { text-align: left; padding: 0.2rem 0.35rem; }
 .stan-status { min-height: 1.25rem; font-size: 0.82rem; color: #a02621; }
 
-.stan-dialog-body .stan-cta {
+.stan-dialog :is(.stan-dialog-body, .stan-gallery-footer) .stan-cta {
   display: flex;
   width: 100%;
   min-height: 3rem;
@@ -306,7 +397,7 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
   font: 600 0.93rem var(--display, "Barlow Semi Condensed", sans-serif);
   cursor: pointer;
 }
-.stan-dialog-body .stan-cta:hover { border-color: var(--brand-blue, #1163af); background: var(--brand-blue, #1163af); color: #fff; }
+.stan-dialog :is(.stan-dialog-body, .stan-gallery-footer) .stan-cta:hover { border-color: var(--brand-blue, #1163af); background: var(--brand-blue, #1163af); color: #fff; }
 .stan-exchanges { margin-top: 1rem; border-top: 1px solid var(--line, #e7d6c6); padding-top: 0.65rem; font-size: 0.88rem; }
 .stan-exchanges summary { font-weight: 600; cursor: pointer; }
 .stan-exchanges p { color: #495969; }
@@ -363,6 +454,18 @@ html:has(.stan-dialog[open]) { overflow: hidden; }
   .stan-filter-field :is(input, select) { font-size: 0.82rem; padding-inline: 0.35rem; }
   .stan-product { grid-template-columns: minmax(0, 1fr); }
   .stan-product-art { aspect-ratio: 1.22; }
+  .stan-dialog-gallery { width: calc(100% - 1rem); max-height: calc(100dvh - 1rem); }
+  .stan-dialog-gallery > .stan-dialog-head { gap: .55rem; padding: .6rem var(--gallery-gutter); }
+  .stan-dialog-gallery > .stan-dialog-head h2 { font-size: clamp(1.3rem, 5.2vw, 1.65rem); }
+  .stan-photo-layout, .stan-gallery--with-thumbnails { grid-template-columns: minmax(0, 1fr); }
+  .stan-gallery--with-thumbnails .stan-gallery-stage,
+  .stan-gallery-thumbnails { grid-column: auto; grid-row: auto; }
+  .stan-gallery .stan-gallery-stage img { height: clamp(140px, 38dvh, 290px); }
+  .stan-gallery-thumbnails { flex-direction: row; }
+  .stan-gallery-thumbnails button { width: 4.4rem; }
+  .stan-gallery-thumbnails img { height: 2.8rem; }
+  .stan-gallery-footer { justify-content: flex-start; }
+  .stan-gallery-footer .stan-cta { max-width: none; }
   .stan-invoice-info { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .stan-bag-item { grid-template-columns: 3.2rem minmax(0, 1fr) auto; gap: 0.4rem; }
   .stan-bag-item > strong { font-size: 0.78rem; }
