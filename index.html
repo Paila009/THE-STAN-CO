@@ -13,21 +13,27 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <div class="opening-slate" data-seen-key="the-stan-co:video-intro-seen" hidden>
+  <div class="opening-slate" hidden>
     <div class="opening-slate__loading" role="status">
       <div class="opening-slate__monogram" aria-hidden="true">S<span>.</span></div>
       <span>Loading storefront</span>
       <div class="opening-slate__meter" aria-hidden="true"><span></span></div>
     </div>
-    <video class="opening-slate__video" data-mobile-src="/stan-co-intro.mp4" data-desktop-src="/stan-co-intro-desktop.mp4" muted playsinline preload="none" aria-hidden="true"></video>
+    <video class="opening-slate__video" muted playsinline preload="none" aria-hidden="true"></video>
     <button class="opening-slate__skip" type="button" data-intro-skip>Skip intro <span aria-hidden="true">→</span></button>
   </div>
   <script>
     const introScreen = document.querySelector('.opening-slate');
+    const useMobileIntro = matchMedia('(hover: none) and (pointer: coarse)').matches;
+    const intro = useMobileIntro
+      ? { seenKey: 'the-stan-co:video-intro-seen', src: '/stan-co-intro.mp4' }
+      : { seenKey: 'the-stan-co:desktop-intro-seen:v2', src: '/stan-co-intro-desktop.mp4' };
     let introSeen = false;
-    try { introSeen = localStorage.getItem(introScreen.dataset.seenKey) === '1'; } catch {}
+    try { introSeen = localStorage.getItem(intro.seenKey) === '1'; } catch {}
     if (!introSeen && (!location.hash || location.hash === '#top') && !matchMedia('(prefers-reduced-motion: reduce)').matches
         && performance.getEntriesByType('navigation')[0]?.type !== 'back_forward') {
+      introScreen.dataset.seenKey = intro.seenKey;
+      introScreen.querySelector('video').dataset.src = intro.src;
       introScreen.hidden = false;
     }
   </script>
